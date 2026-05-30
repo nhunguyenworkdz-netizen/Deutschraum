@@ -1,1 +1,846 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><link rel="shortcut icon" href="./favicon.ico"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/><meta http-equiv="Pragma" content="no-cache"/><meta http-equiv="Expires" content="0"/><meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no"/><meta name="theme-color" content="#000000"/><title>Office Scripts</title><script>var url=window.location.href,isLocal=0===url.indexOf("https://localhost:3003/");window.OsfOptOut=isLocal,window.useAssociatedActionsOnly=!0</script><style>*,::after,::before{padding:0;margin:0;-webkit-box-sizing:inherit;box-sizing:inherit}html{font-size:62.5%}body{font-family:"Segoe UI Web (Arabic)","Segoe UI",-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif!important;color:#323b3a;font-size:14px;-webkit-box-sizing:border-box;box-sizing:border-box;overscroll-behavior-y:none;background-color:#fff;overflow:hidden}#loadingWrapper{background:#f5f5f5;width:100%;height:100%;position:absolute}#loading{position:absolute;z-index:2000000;color:#212121;background:#f5f5f5;height:100%;width:100%;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center}#loading>img{height:120px;margin-bottom:15px}#loading>h1{color:#666;margin-top:10px;margin-bottom:10px;margin-left:8px}#loading>h2{color:#999;max-width:250px;text-align:center}#loading>a{color:#999!important;margin-top:10px}@media only screen and (max-width:500px){#loading>pre{padding:0 30px}}#loading>.loading-indicator{-webkit-box-sizing:border-box;box-sizing:border-box;text-align:center;border:2px solid #9fcdb3;border-top:2px solid #217346;border-radius:50%;width:30px;height:30px;animation:loading-animation 1s linear infinite}@-webkit-keyframes loading-animation{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}@keyframes loading-animation{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}#errorRoot{height:100%;width:100%;display:block;padding:0 1.6rem 1.6rem;background:#f5f5f5;height:100vh;min-height:100vh;width:100%;display:flex;flex-direction:column}#errorRoot label{display:block;padding-top:5px;padding-bottom:5px}#errorRoot #errorHeader{font-size:15px;font-weight:600}#errorRoot #errorDescription{font-size:12px}#errorRoot #errorFooter{font-size:12px}#errorRoot .endJustifiedFlexWrapper{width:100%;display:flex;justify-content:flex-end}#errorRoot button{background-color:#217346;color:#fff;font-size:12px;font-weight:600;min-width:80px;height:2.6rem;border-color:transparent;outline:transparent;border-width:1px;border-radius:2px;margin-top:2.4rem}#errorRoot button:hover{background-color:#0f522d}#errorRoot button:active{background-color:#084121}#errorRoot pre{font-size:100%;color:#999;margin-top:10px;max-height:50%;max-width:100%;padding:0 80px;word-break:break-all;white-space:pre-wrap;overflow-y:auto}</style><meta name="Content-Security-Policy" content="default-src 'none' ; script-src 'self' 'unsafe-inline' https://alcdn.msauth.net https://appsforoffice.microsoft.com ; img-src 'self' data: ; style-src 'unsafe-inline' ; font-src 'self' data: https://res-1.cdn.office.net https://spoprod-a.akamaihd.net ; frame-src 'self' *.test.arbitraryrunner.com *.runtime.arbitraryrunner.com *.officescripts.microsoftusercontent.com *.gcc.officescripts.microsoftusercontent.com https://telemetryservice.firstpartyapps.oaspapps.com https://login.microsoftonline.com https://microsoft-onmicrosoft-com.access.mcas.ms ; connect-src 'self' https://api.test.arbitraryrunner.com https://api.runtime.arbitraryrunner.com https://api.officescripts.microsoftusercontent.com https://api.gcc.officescripts.microsoftusercontent.com https://login.microsoftonline.com https://browser.events.data.microsoft.com https://graph.microsoft.com https://*.powerautomate.com https://*.events.data.microsoft.com https://*.api.flow.microsoft.com https://res.cdn.office.net https://login.live.com https://*.access.mcas.ms https://*.access.mcas-gov.ms https://eu-mobile.events.data.microsoft.com https://microsoft-my.sharepoint-df.com ; require-trusted-types-for 'script' ; trusted-types script-url#webpack officejs officejs-domparser officejs-url ;"><script defer="defer">(()=>{"use strict";var e={},t={};function a(r){var c=t[r];if(void 0!==c)return c.exports;var o=t[r]={id:r,loaded:!1,exports:{}};return e[r].call(o.exports,o,o.exports,a),o.loaded=!0,o.exports}a.m=e,a.amdO={},(()=>{var e=[];a.O=(t,r,c,o)=>{if(!r){var d=1/0;for(s=0;s<e.length;s++){r=e[s][0],c=e[s][1],o=e[s][2];for(var f=!0,n=0;n<r.length;n++)(!1&o||d>=o)&&Object.keys(a.O).every((e=>a.O[e](r[n])))?r.splice(n--,1):(f=!1,o<d&&(d=o));if(f){e.splice(s--,1);var i=c();void 0!==i&&(t=i)}}return t}o=o||0;for(var s=e.length;s>0&&e[s-1][2]>o;s--)e[s]=e[s-1];e[s]=[r,c,o]}})(),a.n=e=>{var t=e&&e.__esModule?()=>e.default:()=>e;return a.d(t,{a:t}),t},(()=>{var e,t=Object.getPrototypeOf?e=>Object.getPrototypeOf(e):e=>e.__proto__;a.t=function(r,c){if(1&c&&(r=this(r)),8&c)return r;if("object"==typeof r&&r){if(4&c&&r.__esModule)return r;if(16&c&&"function"==typeof r.then)return r}var o=Object.create(null);a.r(o);var d={};e=e||[null,t({}),t([]),t(t)];for(var f=2&c&&r;"object"==typeof f&&!~e.indexOf(f);f=t(f))Object.getOwnPropertyNames(f).forEach((e=>d[e]=()=>r[e]));return d.default=()=>r,a.d(o,d),o}})(),a.d=(e,t)=>{for(var r in t)a.o(t,r)&&!a.o(e,r)&&Object.defineProperty(e,r,{enumerable:!0,get:t[r]})},a.f={},a.e=e=>Promise.all(Object.keys(a.f).reduce(((t,r)=>(a.f[r](e,t),t)),[])),a.u=e=>8227===e?"8227.2685c23d.js":9342===e?"9342.96f561fc.js":2152===e?"2152.1e740448.js":3677===e?"3677.ef424f21.js":5183===e?"5183.286cdd2d.js":({932:"run-from-button",1715:"LocalStorageConsent",2178:"notfound",3275:"LocalStorageWorkbook",3293:"LocalStorageUsers",4261:"office.script.sync",4835:"office.script.synchronous.intellisense.types",5225:"LocalStorageVersion",5560:"LocalStorageAdmin",6008:"editor",7504:"office.script.synchronous.library",7537:"office.script.synchronous.intellisense.synchronous.preview",7594:"about",8456:"office.script.synchronous.intellisense.batch",8773:"power-automate",8943:"office.script.synchronous.intellisense.synchronous",9777:"recorder"}[e]||e)+"."+{50:"81bcfa68",362:"911f4102",402:"b5aa3350",559:"46fd09dd",564:"82b4bc74",572:"6850c96d",632:"1bf4b1fd",658:"7c9b90a8",672:"e32d37dd",738:"8bc14375",787:"2cf0ef06",865:"7f015726",932:"7bb95972",962:"519af2f7",968:"72801b8d",974:"380e6dfc",976:"621356db",1042:"1eaf8078",1072:"61c454d2",1106:"1cb898df",1128:"ddcb62c3",1244:"78d6f28d",1250:"78124570",1299:"d6b5abde",1354:"9341b9f3",1374:"dfee9c2e",1444:"d2df1f22",1468:"a0e19e50",1514:"5555c974",1551:"304309d5",1634:"49d1a06f",1674:"d0808f02",1715:"a5540e66",1717:"56891346",1770:"98549e90",1790:"29f1e6ac",1859:"ec0ad7a1",1994:"fba1019d",2156:"b09a50a3",2178:"aaad3989",2200:"d8fb2469",2210:"6d74fbd2",2326:"f8ce6c56",2338:"7b059dea",2362:"6f608309",2442:"cdd85337",2481:"1bdbd6bc",2573:"f914161e",2653:"50c52713",2674:"81ec70db",2870:"9f38c6e0",3039:"626a44cf",3076:"8a68511c",3126:"8edae53d",3164:"c64d4992",3201:"356d6ee1",3205:"8e6aad4e",3215:"1ef83c64",3275:"a6e7bf8f",3282:"177de2a6",3293:"ac939ba3",3329:"703e181b",3420:"8a1c7c75",3430:"c8382908",3763:"7fed6198",3892:"40acede0",4058:"c450e201",4094:"776a3f68",4128:"4b681774",4163:"fbd5bfd4",4170:"b44717c5",4183:"f95c2cc9",4210:"41f27a4a",4240:"63422805",4261:"b8dd2068",4346:"6ab37e06",4347:"3ebf047a",4358:"c8125f73",4470:"09ba3d57",4474:"53c7ce19",4517:"1cd1e537",4642:"aa4d3d64",4733:"4adea50e",4751:"3ce0895e",4754:"905d2606",4770:"a10e8b96",4782:"02123cad",4822:"757f6675",4835:"fed22594",4930:"87f6cbb8",5031:"6010e04b",5058:"8e83f4c3",5092:"95f9f0dd",5142:"ebb12d06",5156:"53b93b15",5164:"3079b98d",5225:"f60306da",5318:"9ef07e23",5346:"f802af0b",5352:"d8ef9633",5354:"eb732b35",5420:"af4e5929",5473:"6c2a92c2",5520:"ada439ab",5560:"1fef5e92",5621:"b6a63473",5662:"91a1b462",5758:"eec2b250",5874:"3b19cfeb",5891:"c70d7ff8",5902:"d21edf73",5916:"3b92ea61",5953:"6d08dcf8",6008:"deda4990",6026:"d1eb290b",6034:"387cf54a",6077:"b6c6e237",6082:"6eaf6a22",6128:"817ffa63",6130:"6f6abd14",6188:"de3de6b8",6223:"1150de1d",6295:"e488bce5",6444:"652a5ceb",6471:"4dd9df0e",6499:"88b5f3df",6510:"b230f1c6",6561:"315b34f4",6592:"a43f01f0",6608:"06a0276c",6676:"f50abb6f",6738:"d933dab7",6748:"0d9fdff3",6786:"9f25b074",6898:"54fde2c4",6900:"a9bf6198",6981:"22b3c282",7244:"6ed435ef",7254:"a369c600",7312:"f458318b",7374:"629d34b4",7397:"35570641",7421:"b1e4dfaa",7432:"6fb543f0",7498:"e65ec1a2",7504:"29fa7b01",7537:"5b881c8e",7594:"66b2518f",7694:"86d438db",7771:"a561036f",7801:"5220f4fa",7868:"ce781019",7873:"9ef56ecf",7886:"83ce6ecc",7911:"d8648792",7923:"a9a63cec",7925:"afa6507f",7940:"1f692ecb",7952:"37b6a30e",8006:"059d55f2",8172:"5587b14c",8196:"ed951f7b",8206:"7cc9a0ed",8226:"118367fb",8314:"48c2670f",8328:"d08d02d2",8330:"4226d1ba",8346:"9ac8243a",8428:"35e9b337",8456:"e5dc90cd",8566:"995af7e3",8595:"57099aae",8688:"ef0d2c70",8752:"29b52b4d",8773:"cec75f64",8811:"677a8a15",8834:"575a2f56",8888:"83059738",8943:"82ffd9b9",8962:"32d79b90",8974:"ca498549",9108:"67d431a7",9110:"3f01b8e1",9118:"e061e68a",9185:"229f2b29",9246:"49585332",9306:"420c8290",9327:"dd648939",9347:"34933648",9441:"905a12ec",9442:"4bcb482a",9450:"85f8e71b",9520:"8f7c45cf",9559:"f41573ef",9618:"b98ea1d7",9682:"86f43b61",9698:"57220395",9730:"921100d5",9777:"f722d0a7",9858:"4728e2c2",9958:"f23c0617"}[e]+".chunk.js",a.miniCssF=e=>"static/css/"+e+".9095b267.chunk.css",a.g=function(){if("object"==typeof globalThis)return globalThis;try{return this||new Function("return this")()}catch(e){if("object"==typeof window)return window}}(),a.hmd=e=>((e=Object.create(e)).children||(e.children=[]),Object.defineProperty(e,"exports",{enumerable:!0,set:()=>{throw new Error("ES Modules may not assign module.exports or exports.*, Use ESM export syntax, instead: "+e.id)}}),e),a.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),(()=>{var e={},t="maker-code-editor:";a.l=(r,c,o,d)=>{if(e[r])e[r].push(c);else{var f,n;if(void 0!==o)for(var i=document.getElementsByTagName("script"),s=0;s<i.length;s++){var b=i[s];if(b.getAttribute("src")==r||b.getAttribute("data-webpack")==t+o){f=b;break}}f||(n=!0,(f=document.createElement("script")).charset="utf-8",f.timeout=120,a.nc&&f.setAttribute("nonce",a.nc),f.setAttribute("data-webpack",t+o),f.src=a.tu(r)),e[r]=[c];var l=(t,a)=>{f.onerror=f.onload=null,clearTimeout(u);var c=e[r];if(delete e[r],f.parentNode&&f.parentNode.removeChild(f),c&&c.forEach((e=>e(a))),t)return t(a)},u=setTimeout(l.bind(null,void 0,{type:"timeout",target:f}),12e4);f.onerror=l.bind(null,f.onerror),f.onload=l.bind(null,f.onload),n&&document.head.appendChild(f)}}})(),a.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},(()=>{var e;a.tt=()=>{if(void 0===e&&(e={createScriptURL:e=>e},"undefined"!=typeof trustedTypes&&trustedTypes.createPolicy))try{e=trustedTypes.createPolicy("script-url#webpack",e)}catch(e){console.warn('Could not create trusted-types policy "script-url#webpack"')}return e}})(),a.tu=e=>a.tt().createScriptURL(e),a.p="./",(()=>{var e=e=>new Promise(((t,r)=>{var c=a.miniCssF(e),o=a.p+c;if(((e,t)=>{for(var a=document.getElementsByTagName("link"),r=0;r<a.length;r++){var c=(d=a[r]).getAttribute("data-href")||d.getAttribute("href");if("stylesheet"===d.rel&&(c===e||c===t))return d}var o=document.getElementsByTagName("style");for(r=0;r<o.length;r++){var d;if((c=(d=o[r]).getAttribute("data-href"))===e||c===t)return d}})(c,o))return t();((e,t,a,r)=>{var c=document.createElement("link");c.rel="stylesheet",c.type="text/css",c.onerror=c.onload=o=>{if(c.onerror=c.onload=null,"load"===o.type)a();else{var d=o&&("load"===o.type?"missing":o.type),f=o&&o.target&&o.target.href||t,n=new Error("Loading CSS chunk "+e+" failed.\n("+f+")");n.code="CSS_CHUNK_LOAD_FAILED",n.type=d,n.request=f,c.parentNode.removeChild(c),r(n)}},c.href=t,document.head.appendChild(c)})(e,o,t,r)})),t={4577:0};a.f.miniCss=(a,r)=>{t[a]?r.push(t[a]):0!==t[a]&&{8330:1}[a]&&r.push(t[a]=e(a).then((()=>{t[a]=0}),(e=>{throw delete t[a],e})))}})(),(()=>{a.b=document.baseURI||self.location.href;var e={4577:0};a.f.j=(t,r)=>{var c=a.o(e,t)?e[t]:void 0;if(0!==c)if(c)r.push(c[2]);else if(4577!=t){var o=new Promise(((a,r)=>c=e[t]=[a,r]));r.push(c[2]=o);var d=a.p+a.u(t),f=new Error;a.l(d,(r=>{if(a.o(e,t)&&(0!==(c=e[t])&&(e[t]=void 0),c)){var o=r&&("load"===r.type?"missing":r.type),d=r&&r.target&&r.target.src;f.message="Loading chunk "+t+" failed.\n("+o+": "+d+")",f.name="ChunkLoadError",f.type=o,f.request=d,c[1](f)}}),"chunk-"+t,t)}else e[t]=0},a.O.j=t=>0===e[t];var t=(t,r)=>{var c,o,d=r[0],f=r[1],n=r[2],i=0;if(d.some((t=>0!==e[t]))){for(c in f)a.o(f,c)&&(a.m[c]=f[c]);if(n)var s=n(a)}for(t&&t(r);i<d.length;i++)o=d[i],a.o(e,o)&&e[o]&&e[o][0](),e[o]=0;return a.O(s)},r=self.webpackChunkmaker_code_editor=self.webpackChunkmaker_code_editor||[];r.forEach(t.bind(null,0)),r.push=t.bind(null,r.push.bind(r))})(),a.nc=void 0})()</script><script defer="defer" src="./7781.310041a4.js"></script><script defer="defer" src="./7448.f3919ecb.js"></script><script defer="defer" src="./3689.486c1624.js"></script><script defer="defer" src="./1473.1d357123.js"></script><script defer="defer" src="./main.5e1553bf.js"></script><link href="./static/css/main.cc196895.css" rel="stylesheet"></head><body class="ms-Fabric"><noscript>You need to enable JavaScript to enable this functionality.</noscript><div id="errorRoot" style="display:none"><label id="errorHeader" class="ms-label">Error</label> <label id="errorDescription" class="ms-label">An unexpected error occurred.</label> <button id="feedbackButton" style="display:none" class="ms-button" onclick='OfficeFirstParty.UserFeedback.CollectUserFeedback(3,1,"Extensibility\\Office Scripts",{})'><label id="feedBackText"></label></button> <label id="errorFooter" class="ms-label"></label><div class="endJustifiedFlexWrapper"><button id="refreshButton" class="ms-button" onclick="location.reload(!0)">Refresh</button></div></div><div id="loadingWrapper"><div id="loading" style="visibility:hidden"><div class="loading-indicator"></div><h2 class="ms-font-m"></h2></div></div><div id="root"></div></body></html>
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Deutsche Zeit</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+        },
+        colors: {
+          accent: {
+            50:'#f1f3fb',100:'#e2e7f6',200:'#c6cfec',300:'#9aabdd',
+            400:'#6a80c8',500:'#475db0',600:'#36479a',700:'#2c2e7a',
+            800:'#272a66',900:'#222553',
+          }
+        }
+      }
+    }
+  };
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  .font-display { font-family: 'Fraunces', Georgia, serif; }
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(120,113,108,.28); border-radius: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(120,113,108,.5); }
+  .cal-cell { background: var(--bg-l); color: var(--text-l); }
+  html.dark .cal-cell { background: var(--bg-d); color: var(--text-d); }
+  .fade-in { animation: fadeIn .35s cubic-bezier(.2,.7,.3,1) both; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  ::selection { background: rgba(122,110,240,.22); }
+  .card-shadow { box-shadow: 0 1px 2px rgba(28,25,23,.04), 0 4px 16px -8px rgba(28,25,23,.10); }
+  html.dark .card-shadow { box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6); }
+  .hover-lift { transition: transform .25s cubic-bezier(.2,.7,.3,1), box-shadow .25s, border-color .25s; }
+  .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(28,25,23,.05), 0 16px 32px -12px rgba(28,25,23,.18); }
+</style>
+</head>
+<body class="bg-stone-50 dark:bg-[#15130f] text-stone-800 dark:text-stone-100 transition-colors">
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useMemo, useEffect } = React;
+
+/* MOCK DATA */
+/* ===== CLASSES ===== */
+const CLASSES = [
+  { id: "DZ-A1-02", level: "A1", status: "active", start: "2026-05-04", end: "2026-07-20", days: "T2/T4/T6", time: "19:00 – 21:30", teachers: [{name:"Cô Phương Anh",days:"T6",sessions:"11/15"}, {name:"Cô Huyền Linh",days:"T2 / T4",sessions:"22/30"}] },
+  { id: "DZ-A2-01", level: "A2", status: "active", start: "2026-05-05", end: "2026-08-13", days: "T3/T5/T7", time: "19:00 – 21:30", teachers: [{name:"Cô Phương Anh",days:"T3 / T5",sessions:"16/24"}, {name:"Cô Phương Linh",days:"T7",sessions:"9/12"}] },
+  { id: "DZ-Ôn-tập-A1-03", level: "Ôn tập A1", status: "active", start: "2026-05-19", end: "2026-06-13", days: "T3/T7", time: "19:00 – 21:15", teachers: [{name:"Cô Phương Linh",days:"T3",sessions:"2/4"}, {name:"Cô Phong Như",days:"T7",sessions:"3/4"}] },
+  { id: "DZ-A2-02", level: "A2", status: "upcoming", start: "2026-06-08", end: "2026-08-21", days: "T2/T4/T5/T6", time: "19:00 – 21:15", teachers: [{name:"Cô Linh Chi",days:"T2 / T5",sessions:"22"}, {name:"Cô Phong Như",days:"T4 / T6",sessions:"22"}] },
+  { id: "DZ-Ôn-tập-A1-04", level: "Ôn tập A1", status: "upcoming", start: "2026-06-11", end: "2026-07-04", days: "T5/T7", time: "19:00 – 21:15", teachers: [{name:"Cô Phương Linh",days:"T5",sessions:"4"}, {name:"Cô Huyền Linh",days:"T7",sessions:"4"}] },
+  { id: "DZ-Ôn-tập-A1-05", level: "Ôn tập A1", status: "upcoming", start: "2026-06-17", end: "2026-07-10", days: "T2/T6", time: "19:00 – 21:15", teachers: [{name:"Cô Huyền Linh",days:"T6",sessions:"4"}, {name:"Cô Mai Chi",days:"T2",sessions:"3"}] },
+  { id: "DZ-Ôn-tập-A2-01", level: "Ôn tập A2", status: "upcoming", start: "2026-06-26", end: "2026-07-23", days: "T2/T5", time: "19:00 – 21:15", teachers: [{name:"Cô Phương Anh",days:"T2",sessions:"4"}, {name:"Cô Quỳnh Anh",days:"T5",sessions:"4"}] },
+  { id: "DZ-A1-03", level: "A1", status: "upcoming", start: "2026-07-06", end: "2026-09-23", days: "T2/T4/T6", time: "19:00 – 21:15", note: "⚠ Bù 1 buổi lễ: 02/09", teachers: [{name:"Cô Mai Chi",days:"T2 / T4",sessions:"24"}, {name:"Cô Khiết Quỳnh",days:"T6",sessions:"11"}] },
+  { id: "DZ-A1-01", level: "A1", status: "finished", start: "2026-04-06", end: "2026-05-19", days: "T2/T4/T6", time: "19:00 – 21:30", teachers: [{name:"Cô Khiết Quỳnh",days:"T2 / T4 / T6",sessions:"✓"}, {name:"Cô Phương Anh",days:"T6 / T2 / T4",sessions:"✓"}] },
+  { id: "DZ-Ôn-tập-A1-01", level: "Ôn tập A1", status: "finished", start: "2026-04-07", end: "2026-05-02", days: "T3", time: "19:00 – 21:30", teachers: [{name:"Cô Phương Linh",days:"T3",sessions:"✓"}, {name:"Cô Phương Anh",days:"T7",sessions:"✓"}] },
+  { id: "DZ-Ôn-tập-A1-02", level: "Ôn tập A1", status: "finished", start: "2026-04-16", end: "2026-05-14", days: "T5/T7", time: "19:00 – 21:30", teachers: [{name:"Cô Phương Linh",days:"T5 / T7",sessions:"✓"}, {name:"Cô Khiết Quỳnh",days:"T7",sessions:"✓"}] },
+];
+
+const s = (date, classId, time) => ({ date, classId, time });
+
+/* ===== TEACHERS ===== */
+const TEACHERS = [
+  { name: "Cô Phương Anh", totalClasses: 3, totalSessions: 31, classes: ["DZ-A1-02", "DZ-A2-01", "DZ-Ôn-tập-A2-01"],
+    schedule: [
+      s("2026-06-02","DZ-A2-01","19:00 – 21:30"),s("2026-06-04","DZ-A2-01","19:00 – 21:30"),s("2026-06-05","DZ-A1-02","19:00 – 21:30"),s("2026-06-09","DZ-A2-01","19:00 – 21:30"),
+      s("2026-06-11","DZ-A2-01","19:00 – 21:30"),s("2026-06-12","DZ-A1-02","19:00 – 21:30"),s("2026-06-16","DZ-A2-01","19:00 – 21:30"),s("2026-06-18","DZ-A2-01","19:00 – 21:30"),
+      s("2026-06-19","DZ-A1-02","19:00 – 21:30"),s("2026-06-23","DZ-A2-01","19:00 – 21:30"),s("2026-06-25","DZ-A2-01","19:00 – 21:30"),s("2026-06-26","DZ-A1-02","19:00 – 21:30"),
+      s("2026-06-29","DZ-Ôn-tập-A2-01","19:00 – 21:15"),s("2026-06-30","DZ-A2-01","19:00 – 21:30"),s("2026-07-02","DZ-A2-01","19:00 – 21:30"),s("2026-07-03","DZ-A1-02","19:00 – 21:30"),
+      s("2026-07-06","DZ-Ôn-tập-A2-01","19:00 – 21:15"),s("2026-07-07","DZ-A2-01","19:00 – 21:30"),s("2026-07-09","DZ-A2-01","19:00 – 21:30"),s("2026-07-10","DZ-A1-02","19:00 – 21:30"),
+      s("2026-07-13","DZ-Ôn-tập-A2-01","19:00 – 21:15"),s("2026-07-14","DZ-A2-01","19:00 – 21:30"),s("2026-07-16","DZ-A2-01","19:00 – 21:30"),s("2026-07-17","DZ-A1-02","19:00 – 21:30"),
+      s("2026-07-20","DZ-Ôn-tập-A2-01","19:00 – 21:15"),s("2026-07-21","DZ-A2-01","19:00 – 21:30"),s("2026-07-23","DZ-A2-01","19:00 – 21:30"),s("2026-07-24","DZ-A1-02","19:00 – 21:30"),
+      s("2026-07-31","DZ-A1-02","19:00 – 21:30"),s("2026-08-07","DZ-A1-02","19:00 – 21:30"),s("2026-08-14","DZ-A1-02","19:00 – 21:30"),
+    ]},
+  { name: "Cô Huyền Linh", totalClasses: 3, totalSessions: 30, classes: ["DZ-A1-02", "DZ-Ôn-tập-A1-04", "DZ-Ôn-tập-A1-05"],
+    schedule: [
+      s("2026-06-01","DZ-A1-02","19:00 – 21:30"),s("2026-06-03","DZ-A1-02","19:00 – 21:30"),s("2026-06-08","DZ-A1-02","19:00 – 21:30"),s("2026-06-10","DZ-A1-02","19:00 – 21:30"),
+      s("2026-06-13","DZ-Ôn-tập-A1-04","19:00 – 21:15"),s("2026-06-15","DZ-A1-02","19:00 – 21:30"),s("2026-06-17","DZ-A1-02","19:00 – 21:30"),s("2026-06-19","DZ-Ôn-tập-A1-05","19:00 – 21:15"),
+      s("2026-06-20","DZ-Ôn-tập-A1-04","19:00 – 21:15"),s("2026-06-22","DZ-A1-02","19:00 – 21:30"),s("2026-06-24","DZ-A1-02","19:00 – 21:30"),s("2026-06-26","DZ-Ôn-tập-A1-05","19:00 – 21:15"),
+      s("2026-06-27","DZ-Ôn-tập-A1-04","19:00 – 21:15"),s("2026-06-29","DZ-A1-02","19:00 – 21:30"),s("2026-07-01","DZ-A1-02","19:00 – 21:30"),s("2026-07-03","DZ-Ôn-tập-A1-05","19:00 – 21:15"),
+      s("2026-07-04","DZ-Ôn-tập-A1-04","19:00 – 21:15"),s("2026-07-06","DZ-A1-02","19:00 – 21:30"),s("2026-07-08","DZ-A1-02","19:00 – 21:30"),s("2026-07-10","DZ-Ôn-tập-A1-05","19:00 – 21:15"),
+      s("2026-07-13","DZ-A1-02","19:00 – 21:30"),s("2026-07-15","DZ-A1-02","19:00 – 21:30"),s("2026-07-20","DZ-A1-02","19:00 – 21:30"),s("2026-07-22","DZ-A1-02","19:00 – 21:30"),
+      s("2026-07-27","DZ-A1-02","19:00 – 21:30"),s("2026-07-29","DZ-A1-02","19:00 – 21:30"),s("2026-08-03","DZ-A1-02","19:00 – 21:30"),s("2026-08-05","DZ-A1-02","19:00 – 21:30"),
+      s("2026-08-10","DZ-A1-02","19:00 – 21:30"),s("2026-08-12","DZ-A1-02","19:00 – 21:30"),
+    ]},
+  { name: "Cô Mai Chi", totalClasses: 2, totalSessions: 27, classes: ["DZ-Ôn-tập-A1-05", "DZ-A1-03"],
+    schedule: [
+      s("2026-06-15","DZ-Ôn-tập-A1-05","19:00 – 21:15"),s("2026-06-22","DZ-Ôn-tập-A1-05","19:00 – 21:15"),s("2026-06-29","DZ-Ôn-tập-A1-05","19:00 – 21:15"),s("2026-07-06","DZ-A1-03","19:00 – 21:15"),
+      s("2026-07-08","DZ-A1-03","19:00 – 21:15"),s("2026-07-13","DZ-A1-03","19:00 – 21:15"),s("2026-07-15","DZ-A1-03","19:00 – 21:15"),s("2026-07-20","DZ-A1-03","19:00 – 21:15"),
+      s("2026-07-22","DZ-A1-03","19:00 – 21:15"),s("2026-07-27","DZ-A1-03","19:00 – 21:15"),s("2026-07-29","DZ-A1-03","19:00 – 21:15"),s("2026-08-03","DZ-A1-03","19:00 – 21:15"),
+      s("2026-08-05","DZ-A1-03","19:00 – 21:15"),s("2026-08-10","DZ-A1-03","19:00 – 21:15"),s("2026-08-12","DZ-A1-03","19:00 – 21:15"),s("2026-08-17","DZ-A1-03","19:00 – 21:15"),
+      s("2026-08-19","DZ-A1-03","19:00 – 21:15"),s("2026-08-24","DZ-A1-03","19:00 – 21:15"),s("2026-08-26","DZ-A1-03","19:00 – 21:15"),s("2026-08-31","DZ-A1-03","19:00 – 21:15"),
+      s("2026-09-02","DZ-A1-03","19:00 – 21:15"),s("2026-09-07","DZ-A1-03","19:00 – 21:15"),s("2026-09-09","DZ-A1-03","19:00 – 21:15"),s("2026-09-14","DZ-A1-03","19:00 – 21:15"),
+      s("2026-09-16","DZ-A1-03","19:00 – 21:15"),s("2026-09-21","DZ-A1-03","19:00 – 21:15"),s("2026-09-23","DZ-A1-03","19:00 – 21:15"),
+    ]},
+  { name: "Cô Phong Như", totalClasses: 2, totalSessions: 25, classes: ["DZ-Ôn-tập-A1-03", "DZ-A2-02"],
+    schedule: [
+      s("2026-05-30","DZ-Ôn-tập-A1-03","19:00 – 21:15"),s("2026-06-06","DZ-Ôn-tập-A1-03","19:00 – 21:15"),s("2026-06-10","DZ-A2-02","19:00 – 21:15"),s("2026-06-12","DZ-A2-02","19:00 – 21:15"),
+      s("2026-06-13","DZ-Ôn-tập-A1-03","19:00 – 21:15"),s("2026-06-17","DZ-A2-02","19:00 – 21:15"),s("2026-06-19","DZ-A2-02","19:00 – 21:15"),s("2026-06-24","DZ-A2-02","19:00 – 21:15"),
+      s("2026-06-26","DZ-A2-02","19:00 – 21:15"),s("2026-07-01","DZ-A2-02","19:00 – 21:15"),s("2026-07-03","DZ-A2-02","19:00 – 21:15"),s("2026-07-08","DZ-A2-02","19:00 – 21:15"),
+      s("2026-07-10","DZ-A2-02","19:00 – 21:15"),s("2026-07-15","DZ-A2-02","19:00 – 21:15"),s("2026-07-17","DZ-A2-02","19:00 – 21:15"),s("2026-07-22","DZ-A2-02","19:00 – 21:15"),
+      s("2026-07-24","DZ-A2-02","19:00 – 21:15"),s("2026-07-29","DZ-A2-02","19:00 – 21:15"),s("2026-07-31","DZ-A2-02","19:00 – 21:15"),s("2026-08-05","DZ-A2-02","19:00 – 21:15"),
+      s("2026-08-07","DZ-A2-02","19:00 – 21:15"),s("2026-08-12","DZ-A2-02","19:00 – 21:15"),s("2026-08-14","DZ-A2-02","19:00 – 21:15"),s("2026-08-19","DZ-A2-02","19:00 – 21:15"),
+      s("2026-08-21","DZ-A2-02","19:00 – 21:15"),
+    ]},
+  { name: "Cô Linh Chi", totalClasses: 1, totalSessions: 22, classes: ["DZ-A2-02"],
+    schedule: [
+      s("2026-06-08","DZ-A2-02","19:00 – 21:15"),s("2026-06-11","DZ-A2-02","19:00 – 21:15"),s("2026-06-15","DZ-A2-02","19:00 – 21:15"),s("2026-06-18","DZ-A2-02","19:00 – 21:15"),
+      s("2026-06-22","DZ-A2-02","19:00 – 21:15"),s("2026-06-25","DZ-A2-02","19:00 – 21:15"),s("2026-06-29","DZ-A2-02","19:00 – 21:15"),s("2026-07-02","DZ-A2-02","19:00 – 21:15"),
+      s("2026-07-06","DZ-A2-02","19:00 – 21:15"),s("2026-07-09","DZ-A2-02","19:00 – 21:15"),s("2026-07-13","DZ-A2-02","19:00 – 21:15"),s("2026-07-16","DZ-A2-02","19:00 – 21:15"),
+      s("2026-07-20","DZ-A2-02","19:00 – 21:15"),s("2026-07-23","DZ-A2-02","19:00 – 21:15"),s("2026-07-27","DZ-A2-02","19:00 – 21:15"),s("2026-07-30","DZ-A2-02","19:00 – 21:15"),
+      s("2026-08-03","DZ-A2-02","19:00 – 21:15"),s("2026-08-06","DZ-A2-02","19:00 – 21:15"),s("2026-08-10","DZ-A2-02","19:00 – 21:15"),s("2026-08-13","DZ-A2-02","19:00 – 21:15"),
+      s("2026-08-17","DZ-A2-02","19:00 – 21:15"),s("2026-08-20","DZ-A2-02","19:00 – 21:15"),
+    ]},
+  { name: "Cô Phương Linh", totalClasses: 3, totalSessions: 15, classes: ["DZ-A2-01", "DZ-Ôn-tập-A1-03", "DZ-Ôn-tập-A1-04"],
+    schedule: [
+      s("2026-05-30","DZ-A2-01","19:00 – 21:30"),s("2026-06-02","DZ-Ôn-tập-A1-03","19:00 – 21:15"),s("2026-06-06","DZ-A2-01","19:00 – 21:30"),s("2026-06-09","DZ-Ôn-tập-A1-03","19:00 – 21:15"),
+      s("2026-06-11","DZ-Ôn-tập-A1-04","19:00 – 21:15"),s("2026-06-13","DZ-A2-01","19:00 – 21:30"),s("2026-06-18","DZ-Ôn-tập-A1-04","19:00 – 21:15"),s("2026-06-20","DZ-A2-01","19:00 – 21:30"),
+      s("2026-06-25","DZ-Ôn-tập-A1-04","19:00 – 21:15"),s("2026-06-27","DZ-A2-01","19:00 – 21:30"),s("2026-07-02","DZ-Ôn-tập-A1-04","19:00 – 21:15"),s("2026-07-04","DZ-A2-01","19:00 – 21:30"),
+      s("2026-07-11","DZ-A2-01","19:00 – 21:30"),s("2026-07-18","DZ-A2-01","19:00 – 21:30"),s("2026-07-25","DZ-A2-01","19:00 – 21:30"),
+    ]},
+  { name: "Cô Khiết Quỳnh", totalClasses: 1, totalSessions: 11, classes: ["DZ-A1-03"],
+    schedule: [
+      s("2026-07-10","DZ-A1-03","19:00 – 21:15"),s("2026-07-17","DZ-A1-03","19:00 – 21:15"),s("2026-07-24","DZ-A1-03","19:00 – 21:15"),s("2026-07-31","DZ-A1-03","19:00 – 21:15"),
+      s("2026-08-07","DZ-A1-03","19:00 – 21:15"),s("2026-08-14","DZ-A1-03","19:00 – 21:15"),s("2026-08-21","DZ-A1-03","19:00 – 21:15"),s("2026-08-28","DZ-A1-03","19:00 – 21:15"),
+      s("2026-09-04","DZ-A1-03","19:00 – 21:15"),s("2026-09-11","DZ-A1-03","19:00 – 21:15"),s("2026-09-18","DZ-A1-03","19:00 – 21:15"),
+    ]},
+  { name: "Cô Quỳnh Anh", totalClasses: 1, totalSessions: 4, classes: ["DZ-Ôn-tập-A2-01"],
+    schedule: [
+      s("2026-07-02","DZ-Ôn-tập-A2-01","19:00 – 21:15"),s("2026-07-09","DZ-Ôn-tập-A2-01","19:00 – 21:15"),s("2026-07-16","DZ-Ôn-tập-A2-01","19:00 – 21:15"),s("2026-07-23","DZ-Ôn-tập-A2-01","19:00 – 21:15"),
+    ]},
+];
+
+const CLASS_COLORS = {
+  "DZ-A1-02": { bg:"#e9f5ee", bgDark:"#1c2c22", text:"#2b6a3f", textDark:"#a3d2b3", dot:"#3a8a5a" },
+  "DZ-A2-01": { bg:"#e5eef7", bgDark:"#1a2530", text:"#1e4d77", textDark:"#9dc3e6", dot:"#3878b8" },
+  "DZ-Ôn-tập-A1-03": { bg:"#fbf3e1", bgDark:"#2a2419", text:"#8a5a16", textDark:"#d9b380", dot:"#c08b2e" },
+  "DZ-A2-02": { bg:"#f3dde2", bgDark:"#321f24", text:"#8a2f48", textDark:"#e3a5b4", dot:"#b84c69" },
+  "DZ-Ôn-tập-A1-04": { bg:"#e0e3f5", bgDark:"#23253a", text:"#3a3f8a", textDark:"#b3b7e3", dot:"#5e64b8" },
+  "DZ-Ôn-tập-A1-05": { bg:"#e7dff2", bgDark:"#2a2336", text:"#5a3a8a", textDark:"#c2afe0", dot:"#7d5cb8" },
+  "DZ-Ôn-tập-A2-01": { bg:"#f8e6cf", bgDark:"#332515", text:"#8a5a14", textDark:"#e3c490", dot:"#c08b2e" },
+  "DZ-A1-03": { bg:"#d9eaea", bgDark:"#1d2e2e", text:"#1f5e5e", textDark:"#a5cfcf", dot:"#3a8a8a" },
+  "DZ-A1-01": { bg:"#ececea", bgDark:"#262320", text:"#57534e", textDark:"#a8a29e", dot:"#a8a29e" },
+  "DZ-Ôn-tập-A1-01": { bg:"#ececea", bgDark:"#262320", text:"#57534e", textDark:"#a8a29e", dot:"#a8a29e" },
+  "DZ-Ôn-tập-A1-02": { bg:"#ececea", bgDark:"#262320", text:"#57534e", textDark:"#a8a29e", dot:"#a8a29e" },
+};
+
+
+const classColor = (id) => CLASS_COLORS[id] || { bg:"#f5f5f4", bgDark:"#262320", text:"#57534e", textDark:"#d6d3d1", dot:"#78716c" };
+const teacherColor = (t) => classColor(t.classes[0]);
+const formatDate = (iso) => { const [y,m,d] = iso.split("-"); return `${d}/${m}/${y}`; };
+const initials = (name) => name.replace("Cô ","").split(" ").map(p=>p[0]).join("").slice(0,2).toUpperCase();
+
+const levelTint = (level) => {
+  switch(level) {
+    case "A1": return "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300 ring-1 ring-emerald-600/10 dark:ring-emerald-400/20";
+    case "A2": return "bg-sky-50 text-sky-700 dark:bg-sky-500/15 dark:text-sky-300 ring-1 ring-sky-600/10 dark:ring-sky-400/20";
+    case "Ôn tập A1": return "bg-amber-50 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300 ring-1 ring-amber-600/10 dark:ring-amber-400/20";
+    case "Ôn tập A2": return "bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300 ring-1 ring-violet-600/10 dark:ring-violet-400/20";
+    default: return "bg-stone-100 text-stone-600 dark:bg-stone-800 dark:text-stone-300";
+  }
+};
+
+/* ICONS */
+const I = {
+  search:(p)=> <svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>,
+  cal:(p)=> <svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M16 3v3M8 3v3M3 10h18"/></svg>,
+  book:(p)=> <svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>,
+  users:(p)=> <svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  chevL:(p)=> <svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>,
+  chevR:(p)=> <svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>,
+  arrow:(p)=> <svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>,
+  x:(p)=> <svg {...p} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>,
+  moon:(p)=> <svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
+  sun:(p)=> <svg {...p} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>,
+  video:(p)=> <svg {...p} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>,
+  edit:(p)=> <svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>,
+  plus:(p)=> <svg {...p} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>,
+};
+
+/* ===== Zoom links (lưu localStorage, 1 link/lớp) ===== */
+const ZOOM_KEY = "dz_zoom";
+const loadZoom = () => { try { return JSON.parse(localStorage.getItem(ZOOM_KEY)) || {}; } catch (e) { return {}; } };
+function useZoom() {
+  const [zoom, setZoom] = useState(loadZoom);
+  useEffect(() => {
+    const h = () => setZoom(loadZoom());
+    window.addEventListener("dz-zoom", h);
+    return () => window.removeEventListener("dz-zoom", h);
+  }, []);
+  const setLink = (classId, url) => {
+    const next = { ...loadZoom() };
+    if (url && url.trim()) next[classId] = url.trim(); else delete next[classId];
+    try { localStorage.setItem(ZOOM_KEY, JSON.stringify(next)); } catch (e) {}
+    window.dispatchEvent(new Event("dz-zoom"));
+  };
+  return [zoom, setLink];
+}
+
+/* Nút Zoom + ô nhập link cho 1 lớp */
+function ZoomRow({ classId }) {
+  const [zoom, setLink] = useZoom();
+  const url = zoom[classId];
+  const [editing, setEditing] = useState(false);
+  const [val, setVal] = useState(url || "");
+
+  if (editing) {
+    return (
+      <div className="flex items-center gap-1.5 w-full">
+        <input autoFocus value={val} onChange={e=>setVal(e.target.value)} onClick={e=>e.stopPropagation()}
+          placeholder="Dán link Zoom…"
+          className="flex-1 min-w-0 px-2.5 py-1.5 rounded-lg border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-xs focus:outline-none focus:ring-2 focus:ring-accent-400/40"/>
+        <button onClick={(e)=>{e.stopPropagation(); setLink(classId, val); setEditing(false);}} className="px-2.5 py-1.5 rounded-lg bg-accent-600 text-white text-xs font-medium hover:bg-accent-700 transition">Lưu</button>
+        <button onClick={(e)=>{e.stopPropagation(); setVal(url||""); setEditing(false);}} className="px-2 py-1.5 rounded-lg text-stone-400 hover:text-stone-600 text-xs">Huỷ</button>
+      </div>
+    );
+  }
+  if (url) {
+    return (
+      <div className="flex items-center gap-1.5">
+        <a href={url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#2D8CFF] text-white text-xs font-semibold hover:bg-[#2476d6] transition">
+          <I.video/> Vào Zoom
+        </a>
+        <button onClick={(e)=>{e.stopPropagation(); setVal(url); setEditing(true);}} title="Sửa link" className="w-7 h-7 rounded-full text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-800 hover:text-stone-600 flex items-center justify-center transition"><I.edit/></button>
+      </div>
+    );
+  }
+  return (
+    <button onClick={(e)=>{e.stopPropagation(); setEditing(true);}} className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-400 hover:text-accent-600 dark:hover:text-accent-400 transition">
+      <I.plus/> Thêm link Zoom
+    </button>
+  );
+}
+
+/* ============ LOGO ============ */
+function Logo() {
+  const M = "#7a1f2b", G = "#f5b328";
+  const Cell = ({x,y,fill,stroke,letter,lc}) => (
+    <g>
+      <rect x={x} y={y} width="20" height="20" rx="4.5" fill={fill||"none"} stroke={stroke||"none"} strokeWidth="2.4"/>
+      {/* puzzle knobs */}
+      <circle cx={x+10} cy={y} r="2.4" fill={fill||"#fff"} stroke={stroke||"none"} strokeWidth="2.4" className="dark:fill-[#15130f]"/>
+      <circle cx={x+20} cy={y+10} r="2.4" fill={fill||"#fff"} stroke={stroke||"none"} strokeWidth="2.4" className="dark:fill-[#15130f]"/>
+      <text x={x+10} y={y+14.5} textAnchor="middle" fontSize="12" fontWeight="800" fill={lc} fontFamily="Inter, sans-serif">{letter}</text>
+    </g>
+  );
+  return (
+    <svg width="40" height="40" viewBox="-2 -2 52 52" className="flex-shrink-0">
+      <Cell x={3}  y={3}  stroke={M} letter="Z" lc={M}/>
+      <rect x={25} y={3} width="20" height="20" rx="4.5" fill={G}/>
+      <circle cx={35} cy={3} r="2.4" fill={G}/>
+      <text x={35} y={17.5} textAnchor="middle" fontSize="12" fontWeight="800" fill="#fff" fontFamily="Inter, sans-serif">T</text>
+      <Cell x={3}  y={25} stroke={M} letter="E" lc={M}/>
+      <Cell x={25} y={25} stroke={M} letter="I" lc={M}/>
+    </svg>
+  );
+}
+
+/* ============ HEADER ============ */
+function Header({ tab, setTab, dark, setDark }) {
+  return (
+    <header className="sticky top-0 z-30 bg-stone-50/85 dark:bg-[#15130f]/85 backdrop-blur-xl border-b border-stone-200/70 dark:border-stone-800/70">
+      <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2.5">
+          <Logo/>
+          <div className="leading-none">
+            <div className="font-display text-[16px] font-bold tracking-tight text-[#2c2e7a] dark:text-white">DEUTSCHE ZEIT</div>
+            <div className="text-[10px] font-medium text-[#2c2e7a]/70 dark:text-stone-400 tracking-[0.25em] uppercase mt-0.5">Sprachzentrum</div>
+          </div>
+        </div>
+        <nav className="hidden sm:flex items-center gap-1 p-1 rounded-full bg-stone-100/80 dark:bg-stone-900/60 border border-stone-200/60 dark:border-stone-800/60">
+          {[
+            { v: "classes", l: "Lớp học", i: <I.book/> },
+            { v: "teachers", l: "Giáo viên", i: <I.users/> },
+          ].map(o => (
+            <button key={o.v} onClick={()=>setTab(o.v)} className={`px-4 py-1.5 rounded-full text-sm font-medium flex items-center gap-2 transition ${
+              tab === o.v ? "bg-white dark:bg-stone-800 text-stone-900 dark:text-white shadow-sm" : "text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200"
+            }`}>{o.i}{o.l}</button>
+          ))}
+        </nav>
+        <button onClick={()=>setDark(!dark)} className="w-9 h-9 rounded-full border border-stone-200/70 dark:border-stone-800 hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-center text-stone-500 dark:text-stone-400 transition" title="Đổi chế độ">
+          {dark ? <I.sun/> : <I.moon/>}
+        </button>
+      </div>
+      {/* mobile nav */}
+      <div className="sm:hidden px-6 pb-2 flex gap-1">
+        {[{v:"classes",l:"Lớp học"},{v:"teachers",l:"Giáo viên"}].map(o=>(
+          <button key={o.v} onClick={()=>setTab(o.v)} className={`flex-1 px-3 py-1.5 rounded-full text-sm font-medium transition ${tab===o.v?"bg-white dark:bg-stone-800 shadow-sm":"text-stone-500"}`}>{o.l}</button>
+        ))}
+      </div>
+    </header>
+  );
+}
+
+function SearchInput({ value, onChange, placeholder }) {
+  return (
+    <div className="relative">
+      <I.search className="absolute left-3 top-1/2 -translate-y-1/2 text-stone-400"/>
+      <input
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full pl-9 pr-3 py-2 rounded-full border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 text-sm placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-accent-400/40 focus:border-accent-300 transition"
+      />
+    </div>
+  );
+}
+
+function StatusBadge({ status }) {
+  const map = {
+    active:   { c:"text-emerald-700 dark:text-emerald-300", d:"bg-emerald-500", t:"Đang học" },
+    upcoming: { c:"text-accent-700 dark:text-accent-300",   d:"bg-accent-500",  t:"Sắp khai giảng" },
+    finished: { c:"text-stone-400 dark:text-stone-500",     d:"bg-stone-400",   t:"Đã kết thúc" },
+  };
+  const m = map[status] || map.upcoming;
+  return <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${m.c}`}><span className={`w-1.5 h-1.5 rounded-full ${m.d} ${status==="active"?"ring-2 ring-emerald-500/20":""}`}></span>{m.t}</span>;
+}
+
+function LevelChip({ level }) {
+  return <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${levelTint(level)}`}>{level}</span>;
+}
+
+function Avatar({ teacher, size="md" }) {
+  const c = teacherColor(teacher);
+  const sz = size==="lg" ? "w-12 h-12 text-sm" : size==="sm" ? "w-8 h-8 text-[11px]" : "w-10 h-10 text-xs";
+  return (
+    <div className={`${sz} rounded-full flex items-center justify-center font-semibold flex-shrink-0 ring-2 ring-white dark:ring-stone-900`}
+      style={{ background: `var(--ab)`, color: `var(--at)`, '--ab': c.bg, '--at': c.text }}>
+      <span className="cal-cell-text" style={{}}>{initials(teacher.name)}</span>
+    </div>
+  );
+}
+
+function PageHeader({ kicker, title, subtitle, stats }) {
+  return (
+    <div className="mb-7">
+      {kicker && <div className="text-xs font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400 mb-2">{kicker}</div>}
+      <h1 className="font-display text-4xl font-semibold tracking-tight text-stone-900 dark:text-white">{title}</h1>
+      {subtitle && <p className="text-sm text-stone-500 dark:text-stone-400 mt-2">{subtitle}</p>}
+      {stats && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+          {stats.map(s => (
+            <div key={s.label} className="rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-3 card-shadow">
+              <div className="text-[11px] font-medium uppercase tracking-wider text-stone-400 dark:text-stone-500">{s.label}</div>
+              <div className="font-display text-2xl font-semibold text-stone-900 dark:text-white mt-1 tabular-nums">{s.value}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============ CLASSES ============ */
+function ClassesPage() {
+  const [q, setQ] = useState("");
+  const [filter, setFilter] = useState("all");
+
+  const filtered = useMemo(() => {
+    return CLASSES.filter(c => {
+      if (filter !== "all" && c.status !== filter) return false;
+      if (!q.trim()) return true;
+      const n = q.toLowerCase();
+      return c.id.toLowerCase().includes(n) || c.level.toLowerCase().includes(n) || c.teachers.some(t => t.name.toLowerCase().includes(n));
+    });
+  }, [q, filter]);
+
+  return (
+    <div className="max-w-6xl mx-auto px-6 py-10 fade-in">
+      <PageHeader
+        kicker="Quản lý lớp học"
+        title="Lớp học"
+        subtitle="Tổng quan toàn bộ lớp tại trung tâm Deutsche Zeit."
+        stats={[
+          { label:"Tổng số lớp", value: CLASSES.length },
+          { label:"Đang học", value: CLASSES.filter(c=>c.status==="active").length },
+          { label:"Sắp khai giảng", value: CLASSES.filter(c=>c.status==="upcoming").length },
+          { label:"Đã kết thúc", value: CLASSES.filter(c=>c.status==="finished").length },
+        ]}
+      />
+
+      <div className="flex flex-wrap items-center gap-2 mb-5">
+        <div className="flex gap-0.5 bg-stone-100 dark:bg-stone-900 p-1 rounded-full border border-stone-200/60 dark:border-stone-800/60">
+          {[{v:"all",l:"Tất cả"},{v:"active",l:"Đang học"},{v:"upcoming",l:"Sắp KG"},{v:"finished",l:"Đã kết thúc"}].map(o => (
+            <button key={o.v} onClick={()=>setFilter(o.v)} className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition ${
+              filter===o.v ? "bg-white dark:bg-stone-800 text-stone-900 dark:text-white shadow-sm" : "text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200"
+            }`}>{o.l}</button>
+          ))}
+        </div>
+        <div className="flex-1 max-w-xs ml-auto"><SearchInput value={q} onChange={setQ} placeholder="Tìm lớp, giáo viên…"/></div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {filtered.map(c => <ClassCard key={c.id} cls={c}/>)}
+      </div>
+      {filtered.length === 0 && (
+        <div className="text-center py-16 text-sm text-stone-400 dark:text-stone-500">Không có lớp nào khớp.</div>
+      )}
+    </div>
+  );
+}
+
+function ClassCard({ cls }) {
+  const cc = classColor(cls.id);
+  const faded = cls.status === "finished";
+  return (
+    <div className={`group relative rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-5 card-shadow hover-lift overflow-hidden ${faded?"opacity-75":""}`}>
+      <div className="absolute left-0 top-0 bottom-0 w-1" style={{ background: cc.dot }}></div>
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 mb-2">
+            <LevelChip level={cls.level}/>
+            <StatusBadge status={cls.status}/>
+          </div>
+          <h3 className="font-display text-xl font-semibold tracking-tight text-stone-900 dark:text-white truncate">{cls.id}</h3>
+        </div>
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-base flex-shrink-0" style={{ background: cc.bg, color: cc.text }}>
+          <I.book/>
+        </div>
+      </div>
+
+      <div className="space-y-1.5 text-sm text-stone-600 dark:text-stone-300">
+        <div className="flex items-center gap-2"><span className="text-stone-400">Lịch</span><span className="font-medium text-stone-800 dark:text-stone-100">{cls.days}</span><span className="text-stone-300 dark:text-stone-600">·</span><span>{cls.time}</span></div>
+        <div className="flex items-center gap-2"><span className="text-stone-400">Thời gian</span><span className="tabular-nums">{formatDate(cls.start)} → {formatDate(cls.end)}</span></div>
+      </div>
+
+      {cls.note && (
+        <div className="mt-3 text-xs text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 rounded-lg px-3 py-1.5">⚠ {cls.note}</div>
+      )}
+
+      <div className="mt-4 pt-4 border-t border-stone-100 dark:border-stone-800 flex flex-wrap gap-2">
+        {cls.teachers.map(t => {
+          const teacher = TEACHERS.find(x => x.name === t.name) || { name: t.name, classes:[cls.id] };
+          return (
+            <div key={t.name} className="flex items-center gap-2 pr-3 pl-1 py-1 rounded-full bg-stone-50 dark:bg-stone-800/60 border border-stone-100 dark:border-stone-800">
+              <Avatar teacher={teacher} size="sm"/>
+              <div className="leading-tight">
+                <div className="text-xs font-semibold text-stone-800 dark:text-stone-100">{t.name.replace("Cô ","")}</div>
+                <div className="text-[10px] text-stone-400 dark:text-stone-500">{t.days} · {t.sessions} buổi</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {cls.status !== "finished" && (
+        <div className="mt-3 pt-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between gap-2">
+          <ZoomRow classId={cls.id}/>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============ TEACHERS ============ */
+function TeachersPage() {
+  const [q, setQ] = useState("");
+  const [openTeacher, setOpenTeacher] = useState(null);
+  const maxLoad = Math.max(...TEACHERS.map(t=>t.totalSessions));
+
+  const filtered = useMemo(() => {
+    if (!q.trim()) return TEACHERS;
+    const n = q.toLowerCase();
+    return TEACHERS.filter(t => t.name.toLowerCase().includes(n) || t.classes.some(c => c.toLowerCase().includes(n)));
+  }, [q]);
+
+  return (
+    <div className="max-w-6xl mx-auto px-6 py-10 fade-in">
+      <PageHeader
+        kicker="Đội ngũ giảng dạy"
+        title="Giáo viên"
+        subtitle="Lịch dạy và khối lượng công việc của từng giáo viên."
+        stats={[
+          { label:"Giáo viên", value: TEACHERS.length },
+          { label:"Tổng buổi còn lại", value: TEACHERS.reduce((a,t)=>a+t.totalSessions,0) },
+          { label:"Lượt phân lớp", value: TEACHERS.reduce((a,t)=>a+t.totalClasses,0) },
+          { label:"Cao nhất", value: maxLoad + " buổi" },
+        ]}
+      />
+
+      <div className="flex items-center justify-end mb-5">
+        <div className="w-full sm:w-72"><SearchInput value={q} onChange={setQ} placeholder="Tìm giáo viên…"/></div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filtered.map(t => <TeacherCard key={t.name} teacher={t} maxLoad={maxLoad} onOpen={()=>setOpenTeacher(t)}/>)}
+      </div>
+      {filtered.length === 0 && <div className="text-center py-16 text-sm text-stone-400 dark:text-stone-500">Không có giáo viên nào khớp.</div>}
+
+      {openTeacher && <CalendarModal teacher={openTeacher} onClose={()=>setOpenTeacher(null)}/>}
+    </div>
+  );
+}
+
+function TeacherCard({ teacher, maxLoad, onOpen }) {
+  const c = teacherColor(teacher);
+  return (
+    <div onClick={onOpen} className="group cursor-pointer rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-5 card-shadow hover-lift relative overflow-hidden">
+      <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full opacity-50 blur-2xl" style={{ background: c.bg }}></div>
+      <div className="relative flex items-center gap-3.5 mb-4">
+        <Avatar teacher={teacher} size="lg"/>
+        <div className="min-w-0">
+          <h3 className="font-display text-lg font-semibold tracking-tight text-stone-900 dark:text-white truncate">{teacher.name}</h3>
+          <div className="text-xs text-stone-400 dark:text-stone-500">Lehrerin</div>
+        </div>
+      </div>
+
+      <div className="relative flex items-center gap-2 mb-4 text-xs">
+        <span className="px-2.5 py-1 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-medium">{teacher.totalClasses} lớp</span>
+        <span className="px-2.5 py-1 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 font-medium">{teacher.totalSessions} buổi</span>
+      </div>
+
+      <div className="relative mb-4">
+        <div className="flex items-center justify-between text-[11px] text-stone-400 dark:text-stone-500 mb-1.5">
+          <span className="uppercase tracking-wider font-medium">Khối lượng</span>
+          <span className="tabular-nums">{Math.round(teacher.totalSessions/maxLoad*100)}%</span>
+        </div>
+        <div className="h-1.5 rounded-full bg-stone-100 dark:bg-stone-800 overflow-hidden">
+          <div className="h-full rounded-full" style={{ width: `${teacher.totalSessions/maxLoad*100}%`, background: c.dot }}></div>
+        </div>
+      </div>
+
+      <div className="relative flex flex-wrap gap-1.5 mb-4">
+        {teacher.classes.map(cid => {
+          const cl = classColor(cid);
+          return (
+            <span key={cid} className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2 py-0.5 rounded-full border border-stone-150 dark:border-stone-800 bg-stone-50 dark:bg-stone-800/50">
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: cl.dot }}></span>
+              <span className="text-stone-600 dark:text-stone-300">{cid}</span>
+            </span>
+          );
+        })}
+      </div>
+
+      <div className="relative flex items-center gap-1.5 text-sm font-medium text-accent-600 dark:text-accent-400 group-hover:gap-2.5 transition-all">
+        <I.cal/> Xem lịch dạy <I.arrow/>
+      </div>
+    </div>
+  );
+}
+
+/* ============ CALENDAR ============ */
+/* Pool tất cả buổi học toàn trung tâm (mỗi buổi: ngày, lớp, giờ, các cô dạy) */
+const ALL_SESSIONS = (() => {
+  const map = {};
+  TEACHERS.forEach(t => t.schedule.forEach(ss => {
+    const k = ss.date + "|" + ss.classId;
+    if (!map[k]) map[k] = { date: ss.date, classId: ss.classId, time: ss.time, teachers: [] };
+    if (!map[k].teachers.includes(t.name)) map[k].teachers.push(t.name);
+  }));
+  return Object.values(map).sort((a,b) => a.date.localeCompare(b.date) || a.classId.localeCompare(b.classId));
+})();
+
+/* Modal chọn buổi dự thính */
+function AuditPicker({ teacher, audit, setAudit, onClose }) {
+  const [q, setQ] = useState("");
+  const today = new Date(); today.setHours(0,0,0,0);
+  const ownKeys = new Set(teacher.schedule.map(s => s.date + "|" + s.classId));
+  const auditSet = new Set(audit);
+
+  const pool = ALL_SESSIONS.filter(s => {
+    if (new Date(s.date) < today) return false;
+    if (ownKeys.has(s.date + "|" + s.classId)) return false;
+    if (!q.trim()) return true;
+    const n = q.toLowerCase();
+    return s.classId.toLowerCase().includes(n) || s.teachers.some(t => t.toLowerCase().includes(n));
+  });
+  // group by date
+  const groups = {};
+  pool.forEach(s => { (groups[s.date] = groups[s.date] || []).push(s); });
+
+  const toggle = (k) => setAudit(a => a.includes(k) ? a.filter(x => x !== k) : [...a, k]);
+  const DAY_VN = ["CN","T2","T3","T4","T5","T6","T7"];
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-stone-900/50 dark:bg-black/80 backdrop-blur-sm fade-in" onClick={onClose}>
+      <div className="bg-white dark:bg-stone-900 rounded-3xl w-full max-w-lg max-h-[85vh] overflow-hidden shadow-2xl border border-stone-200 dark:border-stone-800 flex flex-col" onClick={e => e.stopPropagation()}>
+        <div className="px-5 py-4 border-b border-stone-100 dark:border-stone-800">
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <div className="font-display text-lg font-semibold text-stone-900 dark:text-white">Chọn buổi dự thính</div>
+              <div className="text-xs text-stone-400 dark:text-stone-500 mt-0.5">{teacher.name} · đã chọn {audit.length} buổi</div>
+            </div>
+            <button onClick={onClose} className="w-9 h-9 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-center text-stone-500"><I.x/></button>
+          </div>
+          <div className="mt-3"><SearchInput value={q} onChange={setQ} placeholder="Tìm lớp hoặc cô giáo…"/></div>
+        </div>
+        <div className="overflow-auto scrollbar-thin p-3 flex-1">
+          {Object.keys(groups).length === 0 && <div className="text-center py-12 text-sm text-stone-400">Không có buổi nào.</div>}
+          {Object.entries(groups).map(([date, list]) => {
+            const dt = new Date(date);
+            return (
+              <div key={date} className="mb-3">
+                <div className="px-1 py-1 text-[11px] font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-wider sticky top-0 bg-white/90 dark:bg-stone-900/90 backdrop-blur">
+                  {DAY_VN[dt.getDay()]} · {formatDate(date)}
+                </div>
+                <div className="space-y-1">
+                  {list.map(s => {
+                    const k = s.date + "|" + s.classId;
+                    const on = auditSet.has(k);
+                    const cl = classColor(s.classId);
+                    const others = s.teachers.filter(t => t !== teacher.name);
+                    return (
+                      <button key={k} onClick={()=>toggle(k)}
+                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-xl border text-left transition ${
+                          on ? "border-accent-400 bg-accent-50 dark:bg-accent-700/20 dark:border-accent-600" : "border-stone-150 dark:border-stone-800 hover:border-stone-300 dark:hover:border-stone-700"
+                        }`}>
+                        <span className={`w-5 h-5 rounded-md border-2 flex items-center justify-center flex-shrink-0 ${on ? "bg-accent-600 border-accent-600 text-white" : "border-stone-300 dark:border-stone-600"}`}>
+                          {on && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg>}
+                        </span>
+                        <span className="w-1 self-stretch rounded-full" style={{ background: cl.dot }}></span>
+                        <span className="flex-1 min-w-0">
+                          <span className="block text-sm font-semibold text-stone-800 dark:text-stone-100 truncate">{s.classId}</span>
+                          <span className="block text-xs text-stone-400 dark:text-stone-500 truncate">{s.time} · {others.join(", ") || "—"}</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="px-5 py-3 border-t border-stone-100 dark:border-stone-800 flex items-center justify-between">
+          <button onClick={()=>setAudit([])} className="text-xs font-medium text-stone-400 hover:text-rose-600 transition">Xoá hết</button>
+          <button onClick={onClose} className="px-4 py-2 rounded-full bg-accent-600 text-white text-sm font-medium hover:bg-accent-700 transition">Xong</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CalendarModal({ teacher, onClose }) {
+  const c = teacherColor(teacher);
+  const [zoom] = useZoom();
+  const [idx, setIdx] = useState(0);
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  // Dự thính — lưu localStorage theo tên cô
+  const STORAGE_KEY = "dz_audit_" + teacher.name;
+  const [audit, setAudit] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch (e) { return []; }
+  });
+  useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(audit)); } catch (e) {} }, [audit]);
+
+  // các buổi dự thính (đã chọn) -> object đầy đủ
+  const auditSessions = ALL_SESSIONS.filter(s => audit.includes(s.date + "|" + s.classId));
+
+  // phạm vi tháng = gộp buổi dạy + buổi dự thính
+  const allDates = [...teacher.schedule.map(s => new Date(s.date)), ...auditSessions.map(s => new Date(s.date))].sort((a,b) => a-b);
+  const minD = allDates[0]; const maxD = allDates[allDates.length-1];
+  const months = [];
+  let cur = new Date(minD.getFullYear(), minD.getMonth(), 1);
+  while (cur <= maxD) { months.push(new Date(cur)); cur = new Date(cur.getFullYear(), cur.getMonth()+1, 1); }
+  const safeIdx = Math.min(idx, months.length-1);
+  const month = months[safeIdx];
+  const monthLabel = month.toLocaleDateString("vi-VN", { month: "long", year: "numeric" });
+
+  const inMonth = (iso) => { const d = new Date(iso); return d.getFullYear()===month.getFullYear() && d.getMonth()===month.getMonth(); };
+  const monthSessions = teacher.schedule.filter(s => inMonth(s.date));
+  const monthAudit = auditSessions.filter(s => inMonth(s.date));
+
+  const sessionByDay = {}; monthSessions.forEach(ss => { const d=new Date(ss.date).getDate(); (sessionByDay[d]=sessionByDay[d]||[]).push(ss); });
+  const auditByDay = {};   monthAudit.forEach(ss => { const d=new Date(ss.date).getDate(); (auditByDay[d]=auditByDay[d]||[]).push(ss); });
+
+  const firstWeekday = (new Date(month.getFullYear(), month.getMonth(), 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(month.getFullYear(), month.getMonth()+1, 0).getDate();
+  const cells = [];
+  for (let i = 0; i < firstWeekday; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+
+  const today = new Date();
+  const isToday = (d) => today.getFullYear() === month.getFullYear() && today.getMonth() === month.getMonth() && today.getDate() === d;
+
+  useEffect(()=> {
+    const h = (e) => { if (e.key === "Escape") { if (pickerOpen) setPickerOpen(false); else onClose(); } };
+    window.addEventListener("keydown", h);
+    return ()=> window.removeEventListener("keydown", h);
+  }, [pickerOpen]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 dark:bg-black/70 backdrop-blur-sm fade-in" onClick={onClose}>
+      <div className="bg-white dark:bg-stone-900 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl border border-stone-200 dark:border-stone-800 flex flex-col" onClick={e => e.stopPropagation()}>
+        <div className="px-6 py-4 border-b border-stone-100 dark:border-stone-800 flex items-center gap-3.5">
+          <Avatar teacher={teacher} size="lg"/>
+          <div className="flex-1 min-w-0">
+            <div className="font-display text-lg font-semibold tracking-tight text-stone-900 dark:text-white">{teacher.name}</div>
+            <div className="text-xs text-stone-400 dark:text-stone-500">Kalender · {teacher.totalSessions} buổi · {teacher.totalClasses} lớp{audit.length>0 && <span> · <span className="text-accent-600 dark:text-accent-400 font-medium">{audit.length} dự thính</span></span>}</div>
+          </div>
+          <button onClick={()=>setPickerOpen(true)} className="px-3 py-2 rounded-full bg-accent-50 dark:bg-accent-700/20 text-accent-700 dark:text-accent-300 text-xs font-semibold hover:bg-accent-100 dark:hover:bg-accent-700/30 transition flex items-center gap-1.5 border border-accent-200 dark:border-accent-700/40">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            Dự thính
+          </button>
+          <button onClick={onClose} className="w-9 h-9 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-center text-stone-500"><I.x/></button>
+        </div>
+
+        <div className="px-6 py-3 flex items-center justify-between border-b border-stone-100 dark:border-stone-800">
+          <button disabled={safeIdx===0} onClick={()=>setIdx(i=>Math.max(0,i-1))} className="w-8 h-8 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-stone-500"><I.chevL/></button>
+          <div className="font-display font-medium text-base capitalize text-stone-900 dark:text-white">{monthLabel}</div>
+          <button disabled={safeIdx===months.length-1} onClick={()=>setIdx(i=>Math.min(months.length-1,i+1))} className="w-8 h-8 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-stone-500"><I.chevR/></button>
+        </div>
+
+        <div className="grid lg:grid-cols-[1fr_290px] overflow-hidden flex-1 min-h-0">
+          <div className="p-6 overflow-auto scrollbar-thin">
+            <div className="grid grid-cols-7 gap-1.5 text-center text-[11px] font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-wider mb-2">
+              {["T2","T3","T4","T5","T6","T7","CN"].map(d => <div key={d}>{d}</div>)}
+            </div>
+            <div className="grid grid-cols-7 gap-1.5">
+              {cells.map((d, i) => {
+                if (!d) return <div key={i} className="aspect-square"></div>;
+                const own = sessionByDay[d] || [];
+                const aud = auditByDay[d] || [];
+                const hasOwn = own.length > 0;
+                const hasAud = aud.length > 0;
+                const cl = hasOwn ? classColor(own[0].classId) : null;
+                const style = hasOwn ? { ['--bg-l']:cl.bg, ['--bg-d']:cl.bgDark, ['--text-l']:cl.text, ['--text-d']:cl.textDark } : {};
+                return (
+                  <div key={i} style={style}
+                    className={`aspect-square rounded-xl p-1.5 flex flex-col gap-0.5 text-left transition relative ${
+                      hasOwn ? "cal-cell hover:scale-[1.04]"
+                             : hasAud ? "border-2 border-dashed border-accent-400 text-accent-700 dark:text-accent-300 dark:border-accent-500"
+                             : "text-stone-300 dark:text-stone-700 hover:bg-stone-50 dark:hover:bg-stone-800/40"
+                    } ${isToday(d) ? "ring-2 ring-stone-900 dark:ring-white ring-offset-2 ring-offset-white dark:ring-offset-stone-900" : ""}`}>
+                    <div className="text-xs font-semibold">{d}</div>
+                    {hasOwn && <div className="text-[9px] leading-tight truncate font-medium opacity-90">{own[0].classId.replace("DZ-","").replace("Ôn-tập-","Ôn ")}{own.length>1 && ` +${own.length-1}`}</div>}
+                    {!hasOwn && hasAud && <div className="text-[9px] leading-tight truncate font-medium">{aud[0].classId.replace("DZ-","").replace("Ôn-tập-","Ôn ")}</div>}
+                    {hasAud && <span className="absolute top-0.5 right-1 text-[8px] font-bold text-accent-600 dark:text-accent-300">DT</span>}
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-5 pt-4 border-t border-stone-100 dark:border-stone-800">
+              <div className="text-[11px] font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-wider mb-2">Chú thích</div>
+              <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
+                {teacher.classes.map(cid => {
+                  const cl = classColor(cid);
+                  return <div key={cid} className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-md" style={{ background: cl.dot }}></span><span className="text-stone-600 dark:text-stone-300 font-medium">{cid}</span></div>;
+                })}
+                {audit.length>0 && <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-md border-2 border-dashed border-accent-500"></span><span className="text-accent-600 dark:text-accent-300 font-medium">Dự thính</span></div>}
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t lg:border-t-0 lg:border-l border-stone-100 dark:border-stone-800 overflow-auto scrollbar-thin bg-stone-50/50 dark:bg-stone-950/30">
+            <div className="px-4 py-3 sticky top-0 bg-white/90 dark:bg-stone-900/90 backdrop-blur border-b border-stone-100 dark:border-stone-800">
+              <div className="text-[11px] font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-wider">Tháng {month.getMonth()+1}</div>
+              <div className="text-sm font-display font-semibold text-stone-900 dark:text-white mt-0.5">{monthSessions.length} buổi dạy{monthAudit.length>0 && ` · ${monthAudit.length} dự thính`}</div>
+            </div>
+            <div className="p-3 space-y-1.5">
+              {monthSessions.length === 0 && monthAudit.length === 0 && <div className="text-sm text-stone-400 text-center py-10">Không có buổi nào.</div>}
+              {monthSessions.map((sess, i) => {
+                const cls = CLASSES.find(c => c.id === sess.classId);
+                const cl = classColor(sess.classId);
+                return (
+                  <div key={"o"+i} className="flex gap-2.5 px-2.5 py-2 rounded-xl bg-white dark:bg-stone-900 border border-stone-100 dark:border-stone-800 hover:border-stone-200 dark:hover:border-stone-700 transition">
+                    <span className="w-1 rounded-full self-stretch flex-shrink-0" style={{ background: cl.dot }}></span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2 mb-0.5">
+                        <div className="text-sm font-semibold text-stone-800 dark:text-stone-100 truncate">{sess.classId}</div>
+                        {cls && <LevelChip level={cls.level}/>}
+                      </div>
+                      <div className="text-xs text-stone-400 dark:text-stone-500 tabular-nums">{formatDate(sess.date)} · {sess.time}</div>
+                    </div>
+                    {zoom[sess.classId] && (
+                      <a href={zoom[sess.classId]} target="_blank" rel="noopener noreferrer" title="Vào Zoom" className="self-center flex-shrink-0 w-7 h-7 rounded-full bg-[#2D8CFF]/10 text-[#2D8CFF] hover:bg-[#2D8CFF] hover:text-white flex items-center justify-center transition"><I.video/></a>
+                    )}
+                  </div>
+                );
+              })}
+              {monthAudit.length > 0 && (
+                <div className="pt-2">
+                  <div className="px-1 pb-1 text-[11px] font-semibold text-accent-600 dark:text-accent-400 uppercase tracking-wider">Dự thính</div>
+                  {monthAudit.map((sess, i) => {
+                    const cls = CLASSES.find(c => c.id === sess.classId);
+                    const others = sess.teachers.filter(t => t !== teacher.name);
+                    return (
+                      <div key={"a"+i} className="flex gap-2.5 px-2.5 py-2 rounded-xl border-2 border-dashed border-accent-300 dark:border-accent-700/60 bg-accent-50/40 dark:bg-accent-700/10 mb-1.5">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-2 mb-0.5">
+                            <div className="text-sm font-semibold text-stone-800 dark:text-stone-100 truncate">{sess.classId}</div>
+                            {cls && <LevelChip level={cls.level}/>}
+                          </div>
+                          <div className="text-xs text-stone-400 dark:text-stone-500 tabular-nums">{formatDate(sess.date)} · {sess.time}{others.length>0 && ` · ${others.join(", ")}`}</div>
+                        </div>
+                        {zoom[sess.classId] && (
+                          <a href={zoom[sess.classId]} target="_blank" rel="noopener noreferrer" title="Vào Zoom" className="self-center flex-shrink-0 w-7 h-7 rounded-full bg-[#2D8CFF]/10 text-[#2D8CFF] hover:bg-[#2D8CFF] hover:text-white flex items-center justify-center transition"><I.video/></a>
+                        )}
+                        <button onClick={()=>setAudit(a=>a.filter(x=>x!==sess.date+"|"+sess.classId))} className="self-center text-stone-300 hover:text-rose-500 transition flex-shrink-0"><I.x/></button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      {pickerOpen && <AuditPicker teacher={teacher} audit={audit} setAudit={setAudit} onClose={()=>setPickerOpen(false)}/>}
+    </div>
+  );
+}
+
+/* ============ APP ============ */
+function App() {
+  const [tab, setTab] = useState("classes");
+  const [dark, setDark] = useState(() => {
+    if (typeof window !== "undefined") {
+      if (window.__dz_dark !== undefined) return window.__dz_dark;
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+    window.__dz_dark = dark;
+  }, [dark]);
+
+  return (
+    <div className="min-h-screen">
+      <Header tab={tab} setTab={setTab} dark={dark} setDark={setDark}/>
+      {tab === "classes" && <ClassesPage/>}
+      {tab === "teachers" && <TeachersPage/>}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
