@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "German Error Agent",
+  "schemaVersion": 1,
+  "description": "AI agent giúp Nhu tự động kiểm tra câu tiếng Đức, phát hiện lỗi và lưu vào sổ tay cá nhân (lưu trong localStorage, mở lại được)."
+}
+</script>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Sổ tay lỗi tiếng Đức - AI Agent</title>
+<style>
+:root {
+  color-scheme: light;
+  --primary: #1B3A5C;
+  --secondary: #C9A961;
+  --accent: #8B0000;
+  --green: #2D6A4F;
+  --bg: #FAF8F3;
+  --bg-card: #FFFFFF;
+  --bg-soft: #F4F1E8;
+  --bg-yellow: #FFF8E1;
+  --bg-red: #FFEBEE;
+  --bg-green: #E8F5E9;
+  --bg-blue: #E3F2FD;
+  --text: #2C2C2C;
+  --muted: #6B6B6B;
+  --border: #E0DDD3;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding: 20px;
+  line-height: 1.5;
+}
+
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 24px;
+  background: linear-gradient(135deg, var(--primary), #2c4d70);
+  color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(27, 58, 92, 0.15);
+}
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+.header p { font-size: 14px; opacity: 0.9; }
+
+/* Input section */
+.input-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.input-card h2 {
+  font-size: 16px;
+  color: var(--primary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.input-row { display: flex; gap: 10px; }
+textarea {
+  flex: 1;
+  padding: 12px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s;
+}
+textarea:focus { outline: none; border-color: var(--secondary); }
+.btn {
+  background: var(--secondary);
+  color: white;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn:hover { background: #B5945A; transform: translateY(-1px); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-primary { background: var(--primary); }
+.btn-primary:hover { background: #2c4d70; }
+.btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { background: var(--bg-soft); color: var(--text); }
+.btn-danger { background: var(--accent); }
+.btn-danger:hover { background: #6B0000; }
+
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* Analysis result */
+.analysis {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.analysis.hidden { display: none; }
+.analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.analysis h3 { font-size: 16px; color: var(--primary); }
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  color: var(--muted);
+  font-style: italic;
+}
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid var(--border);
+  border-top-color: var(--secondary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.correct-msg {
+  padding: 14px;
+  background: var(--bg-green);
+  border-left: 4px solid var(--green);
+  border-radius: 8px;
+  color: var(--green);
+  font-weight: 600;
+}
+
+.corrected-sentence {
+  padding: 14px;
+  background: var(--bg-blue);
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+.corrected-sentence strong { color: var(--primary); }
+.corrected-sentence .text { color: var(--green); font-weight: 600; font-style: italic; }
+
+.error-item {
+  background: var(--bg-yellow);
+  border-left: 4px solid var(--secondary);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.error-item.is-correct { background: var(--bg-green); border-left-color: var(--green); }
+.error-item-row { display: grid; grid-template-columns: 80px 1fr; gap: 8px; margin-bottom: 6px; font-size: 14px; }
+.error-item-label { color: var(--muted); font-weight: 600; }
+.error-item-value { color: var(--text); }
+.error-item-value.original { color: var(--accent); text-decoration: line-through; }
+.error-item-value.corrected { color: var(--green); font-weight: 600; }
+.category-tag {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Stats */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.stat-value { font-size: 26px; font-weight: 700; color: var(--primary); }
+.stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* Error log */
+.log-section {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.log-header h2 { font-size: 18px; color: var(--primary); }
+.log-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.filter-chip {
+  padding: 6px 14px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text);
+}
+.filter-chip:hover { background: var(--bg-yellow); }
+.filter-chip.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead { background: var(--primary); color: white; }
+thead th {
+  padding: 10px 8px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 12px;
+}
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+tbody tr:hover { background: var(--bg-soft); }
+tbody td { padding: 10px 8px; vertical-align: top; }
+.col-wrong { color: var(--accent); }
+.col-right { color: var(--green); font-weight: 600; }
+.delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+.delete-btn:hover { background: var(--bg-red); color: var(--accent); }
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--muted);
+}
+.empty-state .emoji { font-size: 48px; margin-bottom: 10px; }
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--green);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.error { background: var(--accent); }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--border);
+}
+.tab {
+  padding: 10px 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+}
+.tab.active { color: var(--primary); border-bottom-color: var(--secondary); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+@media (max-width: 600px) {
+  .input-row { flex-direction: column; }
+  .header h1 { font-size: 20px; }
+  thead th, tbody td { font-size: 12px; padding: 6px 4px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>🤖 Sổ tay lỗi tiếng Đức - AI Agent</h1>
+    <p>Nhập câu tiếng Đức → AI tự động phát hiện lỗi → Ghi vào sổ tay của bạn</p>
+  </div>
+
+  <!-- Input Section -->
+  <div class="input-card">
+    <h2>✍️ Nhập câu tiếng Đức để kiểm tra</h2>
+    <div class="input-row">
+      <textarea id="inputText" placeholder="VD: Ich mache einen Urlaub zum Erholen..." rows="3"></textarea>
+      <button class="btn btn-primary" id="checkBtn" onclick="checkSentence()">🔍 Kiểm tra</button>
+    </div>
+    <p class="hint">💡 AI sẽ phân tích lỗi & tự động thêm vào sổ tay bên dưới</p>
+  </div>
+
+  <!-- Analysis Result -->
+  <div class="analysis hidden" id="analysisCard">
+    <div class="analysis-header">
+      <h3>📊 Kết quả phân tích</h3>
+      <button class="btn btn-ghost" onclick="hideAnalysis()" style="padding: 6px 14px; font-size: 12px;">Đóng</button>
+    </div>
+    <div id="analysisContent"></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value" id="totalErrors">0</div>
+      <div class="stat-label">Tổng lỗi</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="totalChecks">0</div>
+      <div class="stat-label">Lần check</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="topCategory">-</div>
+      <div class="stat-label">Lỗi hay gặp</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="lastCheck">-</div>
+      <div class="stat-label">Lần check cuối</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="log-section">
+    <div class="log-header">
+      <h2>📋 Sổ tay lỗi của bạn</h2>
+      <div class="log-actions">
+        <button class="btn btn-ghost" onclick="exportJSON()" style="padding: 8px 14px; font-size: 13px;">📥 Export</button>
+        <button class="btn btn-ghost" onclick="addManual()" style="padding: 8px 14px; font-size: 13px;">➕ Thêm</button>
+        <button class="btn btn-danger" onclick="clearAll()" style="padding: 8px 14px; font-size: 13px;">🗑️ Xoá hết</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('errors', this)">📋 Danh sách (<span id="countErrors">0</span>)</button>
+      <button class="tab" onclick="switchTab('categories', this)">📂 Theo chủ đề</button>
+    </div>
+
+    <div id="tab-errors" class="tab-content active">
+      <div class="filter-row" id="filterRow"></div>
+      <div id="errorTableContainer">
+        <div class="empty-state">
+          <div class="emoji">📝</div>
+          <p>Chưa có lỗi nào. Hãy nhập câu tiếng Đức để bắt đầu!</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-categories" class="tab-content">
+      <div id="categoriesContainer"></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY = 'german_error_log_v1';
+const STATS_KEY = 'german_error_stats_v1';
+let currentFilter = 'all';
+
+// ====== STORAGE ======
+function loadErrors() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveErrors(errors) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(errors));
+  renderAll();
+}
+function loadStats() {
+  try { return JSON.parse(localStorage.getItem(STATS_KEY) || '{"totalChecks":0,"lastCheck":null}'); }
+  catch { return {totalChecks: 0, lastCheck: null}; }
+}
+function saveStats(stats) {
+  localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+}
+
+// ====== INITIAL DATA (from past sessions) ======
+function seedInitialData() {
+  const existing = loadErrors();
+  if (existing.length > 0) return; // Don't overwrite
+
+  const seedData = [
+    { id: 1, date: '16/05', original: 'ich bin Fußschmerzen', corrected: 'Ich habe Fußschmerzen', rule: 'Đau dùng động từ HABEN (không SEIN)', category: 'Động từ + DT' },
+    { id: 2, date: '16/05', original: 'denn die Landschaft sehr traumhaft ist', corrected: 'denn die Landschaft ist sehr traumhaft', rule: 'Sau "denn" (Pos 0) → Verb vị trí 2', category: 'Vị trí động từ' },
+    { id: 3, date: '16/05', original: 'Türoffner / parktisch', corrected: 'Türöffner / praktisch', rule: 'Chính tả: ö + prak- (không park-)', category: 'Chính tả' },
+    { id: 4, date: '17/05', original: 'Ich mache einen Urlaub', corrected: 'Ich mache Urlaub', rule: '"Urlaub machen" — cụm cố định, không Artikel', category: 'Artikel' },
+    { id: 5, date: '17/05', original: 'zum Erholen', corrected: 'um mich zu erholen', rule: 'sich-Verb → um...zu (không zum)', category: 'Cấu trúc zu' },
+    { id: 6, date: '17/05', original: 'zur Supermarkt', corrected: 'zum Supermarkt', rule: 'der Supermarkt → zu+dem = zum', category: 'Giới từ' },
+    { id: 7, date: '17/05', original: 'mein Hausaufgaben', corrected: 'meine Hausaufgaben', rule: 'Hausaufgaben là Plural → meine', category: 'Possessivpronomen' },
+    { id: 8, date: '17/05', original: 'und hab spät nach Hause', corrected: 'und komme spät nach Hause', rule: 'Thiếu Verb chuyển động', category: 'Vị trí động từ' },
+    { id: 9, date: '18/05', original: 'ich habe nicht mehr Zeit', corrected: 'ich habe keine Zeit mehr', rule: 'DT → kein...mehr (không nicht mehr)', category: 'Phủ định' },
+    { id: 10, date: '18/05', original: 'angeschauen', corrected: 'angeschaut', rule: 'Partizip II của anschauen = angeschaut', category: 'Perfekt' },
+    { id: 11, date: '19/05', original: 'ich war beedrucken', corrected: 'Ich war beeindruckt', rule: 'Trạng thái → Partizip II (beeindruckt) + sein', category: 'Perfekt' },
+  ];
+  saveErrors(seedData);
+}
+
+// ====== ASK CLAUDE (AI Analysis) ======
+async function checkSentence() {
+  const input = document.getElementById('inputText');
+  const text = input.value.trim();
+  if (!text) {
+    showToast('Hãy nhập câu tiếng Đức!', 'error');
+    return;
+  }
+
+  const checkBtn = document.getElementById('checkBtn');
+  checkBtn.disabled = true;
+  checkBtn.textContent = '⏳ Đang phân tích...';
+
+  showAnalysisLoading();
+
+  try {
+    const prompt = `Bạn là giáo viên tiếng Đức B1 phân tích câu cho học viên Việt Nam.
+
+Phân tích câu sau xem có lỗi gì:
+"${text}"
+
+Trả về JSON với cấu trúc CHÍNH XÁC sau (KHÔNG có markdown wrapping, KHÔNG có \`\`\`):
+{
+  "isCorrect": false,
+  "correctedSentence": "Câu đã sửa hoàn chỉnh",
+  "errors": [
+    {
+      "original": "phần sai trong câu gốc",
+      "corrected": "cách sửa đúng",
+      "rule": "Giải thích bằng tiếng Việt ngắn gọn (1 câu)",
+      "category": "Chọn 1 trong: Chính tả|Vị trí động từ|Artikel|Phủ định|Động từ + DT|Possessivpronomen|Cấu trúc zu|Giới từ|Perfekt|Plural|Khác"
+    }
+  ]
+}
+
+Nếu câu hoàn toàn ĐÚNG: trả về {"isCorrect": true, "correctedSentence": "${text}", "errors": []}
+
+Chỉ trả JSON, không thêm gì khác.`;
+
+    const result = await window.cowork.askClaude(prompt);
+
+    // Parse JSON from response
+    let jsonStr = (result || '').trim();
+    // Remove markdown code fences if present
+    jsonStr = jsonStr.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
+    // Try to extract JSON if wrapped in text
+    const jsonMatch = jsonStr.match(/\{[\s\S]*\}/);
+    if (jsonMatch) jsonStr = jsonMatch[0];
+
+    const analysis = JSON.parse(jsonStr);
+    displayAnalysis(text, analysis);
+
+    // Update stats
+    const stats = loadStats();
+    stats.totalChecks = (stats.totalChecks || 0) + 1;
+    stats.lastCheck = new Date().toLocaleDateString('vi-VN');
+    saveStats(stats);
+
+    // Auto-add errors to log
+    if (!analysis.isCorrect && analysis.errors && analysis.errors.length > 0) {
+      addErrorsToLog(analysis.errors);
+    }
+
+    renderAll();
+  } catch (e) {
+    showAnalysisError(e.message || 'Có lỗi xảy ra');
+  } finally {
+    checkBtn.disabled = false;
+    checkBtn.textContent = '🔍 Kiểm tra';
+  }
+}
+
+function showAnalysisLoading() {
+  const card = document.getElementById('analysisCard');
+  card.classList.remove('hidden');
+  document.getElementById('analysisContent').innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>AI đang phân tích câu của bạn...</span>
+    </div>
+  `;
+}
+
+function showAnalysisError(msg) {
+  document.getElementById('analysisContent').innerHTML = `
+    <div class="error-item" style="background: var(--bg-red); border-left-color: var(--accent);">
+      <strong>⚠️ Lỗi:</strong> ${escapeHtml(msg)}<br>
+      <small style="color: var(--muted);">Hãy thử lại hoặc đảm bảo câu đầu vào hợp lệ.</small>
+    </div>
+  `;
+}
+
+function displayAnalysis(originalText, analysis) {
+  const content = document.getElementById('analysisContent');
+
+  if (analysis.isCorrect) {
+    content.innerHTML = `
+      <div class="correct-msg">
+        ✅ Câu của bạn HOÀN TOÀN ĐÚNG! Tuyệt vời 🎉
+      </div>
+      <p style="margin-top: 12px; color: var(--muted); font-size: 13px;">
+        Câu: <em>"${escapeHtml(originalText)}"</em>
+      </p>
+    `;
+    return;
+  }
+
+  let html = `
+    <div class="corrected-sentence">
+      <strong>✓ Câu đúng:</strong> <span class="text">${escapeHtml(analysis.correctedSentence)}</span>
+    </div>
+    <p style="font-size: 13px; color: var(--muted); margin-bottom: 12px;">
+      Phát hiện <strong>${analysis.errors.length} lỗi</strong> — đã tự động thêm vào sổ tay:
+    </p>
+  `;
+
+  analysis.errors.forEach((err, i) => {
+    html += `
+      <div class="error-item">
+        <div class="error-item-row">
+          <span class="error-item-label">❌ Sai:</span>
+          <span class="error-item-value original">${escapeHtml(err.original)}</span>
+        </div>
+        <div class="error-item-row">
+          <span class="error-item-label">✅ Đúng:</span>
+          <span class="error-item-value corrected">${escapeHtml(err.corrected)}</span>
+        </div>
+        <div class="error-item-row">
+          <span class="error-item-label">📖 Quy tắc:</span>
+          <span class="error-item-value">${escapeHtml(err.rule)}</span>
+        </div>
+        <div style="margin-top: 6px;"><span class="category-tag">${escapeHtml(err.category || 'Khác')}</span></div>
+      </div>
+    `;
+  });
+
+  document.getElementById('analysisContent').innerHTML = html;
+}
+
+function addErrorsToLog(newErrors) {
+  const errors = loadErrors();
+  const today = new Date().toLocaleDateString('vi-VN', {day: '2-digit', month: '2-digit'});
+  const maxId = errors.reduce((m, e) => Math.max(m, e.id || 0), 0);
+
+  newErrors.forEach((err, i) => {
+    errors.unshift({
+      id: maxId + i + 1,
+      date: today,
+      original: err.original,
+      corrected: err.corrected,
+      rule: err.rule,
+      category: err.category || 'Khác'
+    });
+  });
+
+  saveErrors(errors);
+  showToast(`✓ Đã thêm ${newErrors.length} lỗi vào sổ tay!`);
+}
+
+function hideAnalysis() {
+  document.getElementById('analysisCard').classList.add('hidden');
+}
+
+// ====== RENDER ======
+function renderAll() {
+  const errors = loadErrors();
+  const stats = loadStats();
+
+  // Stats
+  document.getElementById('totalErrors').textContent = errors.length;
+  document.getElementById('totalChecks').textContent = stats.totalChecks || 0;
+  document.getElementById('lastCheck').textContent = stats.lastCheck || '-';
+  document.getElementById('countErrors').textContent = errors.length;
+
+  // Top category
+  const catCounts = {};
+  errors.forEach(e => { catCounts[e.category] = (catCounts[e.category] || 0) + 1; });
+  const topCat = Object.entries(catCounts).sort((a,b) => b[1]-a[1])[0];
+  document.getElementById('topCategory').textContent = topCat ? topCat[0] : '-';
+  document.getElementById('topCategory').style.fontSize = topCat ? '14px' : '26px';
+
+  // Filter chips
+  renderFilters(errors);
+
+  // Error table
+  renderErrorTable(errors);
+
+  // Categories tab
+  renderCategoriesTab(errors);
+}
+
+function renderFilters(errors) {
+  const cats = ['all', ...new Set(errors.map(e => e.category))];
+  const filterRow = document.getElementById('filterRow');
+  filterRow.innerHTML = cats.map(cat => {
+    const count = cat === 'all' ? errors.length : errors.filter(e => e.category === cat).length;
+    const label = cat === 'all' ? `Tất cả (${count})` : `${cat} (${count})`;
+    return `<button class="filter-chip ${cat === currentFilter ? 'active' : ''}" onclick="setFilter('${escapeAttr(cat)}')">${label}</button>`;
+  }).join('');
+}
+
+function setFilter(cat) {
+  currentFilter = cat;
+  renderAll();
+}
+
+function renderErrorTable(errors) {
+  const filtered = currentFilter === 'all' ? errors : errors.filter(e => e.category === currentFilter);
+  const container = document.getElementById('errorTableContainer');
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="emoji">📝</div>
+        <p>Chưa có lỗi nào ${currentFilter !== 'all' ? `trong "${currentFilter}"` : ''}. ${errors.length === 0 ? 'Hãy nhập câu để bắt đầu!' : ''}</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 60px;">Ngày</th>
+          <th>❌ Lỗi</th>
+          <th>✅ Sửa đúng</th>
+          <th>📖 Quy tắc</th>
+          <th>Chủ đề</th>
+          <th style="width: 40px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        ${filtered.map(e => `
+          <tr>
+            <td style="color: var(--muted);">${escapeHtml(e.date)}</td>
+            <td class="col-wrong">${escapeHtml(e.original)}</td>
+            <td class="col-right">${escapeHtml(e.corrected)}</td>
+            <td>${escapeHtml(e.rule)}</td>
+            <td><span class="category-tag" style="background: var(--bg-soft); color: var(--primary);">${escapeHtml(e.category)}</span></td>
+            <td><button class="delete-btn" onclick="deleteError(${e.id})" title="Xoá">×</button></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+function renderCategoriesTab(errors) {
+  const container = document.getElementById('categoriesContainer');
+  if (errors.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="emoji">📊</div><p>Chưa có dữ liệu</p></div>`;
+    return;
+  }
+
+  const catGroups = {};
+  errors.forEach(e => {
+    if (!catGroups[e.category]) catGroups[e.category] = [];
+    catGroups[e.category].push(e);
+  });
+
+  const sorted = Object.entries(catGroups).sort((a,b) => b[1].length - a[1].length);
+
+  container.innerHTML = sorted.map(([cat, items]) => `
+    <div style="margin-bottom: 20px; padding: 16px; background: var(--bg-soft); border-radius: 12px;">
+      <h3 style="color: var(--primary); margin-bottom: 10px; font-size: 15px;">
+        ${escapeHtml(cat)} <span style="color: var(--accent); font-weight: 700;">(${items.length} lỗi)</span>
+      </h3>
+      <ul style="list-style: none;">
+        ${items.map(e => `
+          <li style="padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+            <span class="col-wrong">${escapeHtml(e.original)}</span> →
+            <span class="col-right">${escapeHtml(e.corrected)}</span>
+            <br>
+            <small style="color: var(--muted);">${escapeHtml(e.rule)}</small>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `).join('');
+}
+
+// ====== ACTIONS ======
+function deleteError(id) {
+  if (!confirm('Xoá lỗi này khỏi sổ tay?')) return;
+  const errors = loadErrors().filter(e => e.id !== id);
+  saveErrors(errors);
+  showToast('✓ Đã xoá');
+}
+
+function clearAll() {
+  if (!confirm('XOÁ HẾT TẤT CẢ lỗi? Hành động này KHÔNG THỂ hoàn tác!')) return;
+  if (!confirm('Bạn chắc chắn chứ?')) return;
+  saveErrors([]);
+  saveStats({totalChecks: 0, lastCheck: null});
+  showToast('✓ Đã xoá hết');
+}
+
+function addManual() {
+  const original = prompt('Nhập LỖI GỐC (câu sai):');
+  if (!original) return;
+  const corrected = prompt('Nhập CÂU SỬA (câu đúng):');
+  if (!corrected) return;
+  const rule = prompt('Quy tắc/Lý do (tuỳ chọn):') || '(Tự ghi)';
+  const category = prompt('Chủ đề (Chính tả/Vị trí động từ/Artikel/Phủ định/...):') || 'Khác';
+
+  const errors = loadErrors();
+  const today = new Date().toLocaleDateString('vi-VN', {day: '2-digit', month: '2-digit'});
+  const maxId = errors.reduce((m, e) => Math.max(m, e.id || 0), 0);
+
+  errors.unshift({
+    id: maxId + 1,
+    date: today,
+    original: original.trim(),
+    corrected: corrected.trim(),
+    rule: rule.trim(),
+    category: category.trim()
+  });
+  saveErrors(errors);
+  showToast('✓ Đã thêm lỗi mới');
+}
+
+function exportJSON() {
+  const errors = loadErrors();
+  if (errors.length === 0) {
+    showToast('Chưa có dữ liệu để export', 'error');
+    return;
+  }
+  const data = JSON.stringify(errors, null, 2);
+  navigator.clipboard.writeText(data).then(() => {
+    showToast('✓ Đã copy JSON vào clipboard');
+  }).catch(() => {
+    // Fallback: download as file
+    const blob = new Blob([data], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `so_tay_loi_tieng_duc_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('✓ Đã tải file JSON');
+  });
+}
+
+// ====== TABS ======
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ====== UTILS ======
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function escapeAttr(str) {
+  return String(str).replace(/'/g, "\\'");
+}
+
+function showToast(msg, type = 'success') {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.className = 'toast show ' + (type === 'error' ? 'error' : '');
+  setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// Enter key to check
+document.getElementById('inputText').addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.key === 'Enter') {
+    checkSentence();
+  }
+});
+
+// ====== INIT ======
+seedInitialData();
+renderAll();
+</script>
+
+</body>
+</html>
