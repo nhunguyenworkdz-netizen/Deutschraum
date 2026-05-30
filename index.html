@@ -358,7 +358,7 @@ function Sidebar({ tab, setTab, dark, setDark, user, onLogout }) {
     ...(user === "Cô Khiết Quỳnh" ? [{ v: "audit", l: "Dự thính", i: <I.cal/> }] : []),
   ];
   return (
-    <aside className="w-16 sm:w-60 shrink-0 border-r border-stone-200/70 dark:border-stone-800/70 bg-stone-50/70 dark:bg-[#15130f]/70 backdrop-blur-xl flex flex-col h-screen sticky top-0 z-30">
+    <aside className="w-14 sm:w-52 shrink-0 border-r border-stone-200/70 dark:border-stone-800/70 bg-stone-50/70 dark:bg-[#15130f]/70 backdrop-blur-xl flex flex-col h-screen sticky top-0 z-30">
       {/* Logo */}
       <div className="px-3 sm:px-4 py-4 flex items-center gap-2.5 border-b border-stone-200/60 dark:border-stone-800/60">
         <Logo/>
@@ -996,6 +996,14 @@ function AuditDashboard() {
   const remove = (k) => { if (!window.confirm("Bỏ buổi này khỏi danh sách dự thính?")) return; saveList(list.filter(x => x !== k)); saveDone(done.filter(x => x !== k)); };
   const markDone = (k) => { if (window.confirm("Xác nhận: bạn đã dự thính buổi này?")) saveDone([...done, k]); };
   const unmark = (k) => { if (window.confirm("Bỏ đánh dấu đã dự buổi này?")) saveDone(done.filter(x => x !== k)); };
+  const joinZoom = (s) => {
+    const url = zoom[s.classId];
+    if (!url) return;
+    if (window.confirm("Vào phòng Zoom của lớp này?\n(Buổi sẽ được tự đánh dấu Đã dự)")) {
+      window.open(url, "_blank", "noopener");
+      saveDone([...new Set([...done, s.date + "|" + s.classId])]);
+    }
+  };
 
   const today = new Date(); today.setHours(0,0,0,0);
   const doneSet = new Set(done);
@@ -1023,14 +1031,17 @@ function AuditDashboard() {
     const d = new Date(s.date);
     const others = s.teachers.filter(t => t !== "Cô Khiết Quỳnh");
     const k = s.date + "|" + s.classId;
-    const isFuture = new Date(s.date) > today;
+    const sLocal = (() => { const [yy,mm,dd] = s.date.split("-").map(Number); return new Date(yy, mm-1, dd); })();
+    const isFuture = sLocal > today;
+    const daysLeft = Math.round((sLocal - today) / 86400000);
+    const soon = daysLeft <= 3;
     return (
       <div className={`flex items-center gap-3 px-3 py-2.5 rounded-xl border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 card-shadow ${attended ? "opacity-70" : ""}`}>
         <div className="flex flex-col items-center justify-center w-12 h-12 rounded-xl flex-shrink-0" style={{ background: cl.bg, color: cl.text }}>
           <div className="text-[9px] font-bold uppercase opacity-70">{DAY_VN[d.getDay()]}</div>
           <div className="text-sm font-display leading-none">{d.getDate()}/{d.getMonth()+1}</div>
         </div>
-        <div className={`flex-1 min-w-0 ${zoom[s.classId] ? "cursor-pointer" : ""}`} onClick={zoom[s.classId] ? ()=>openZoom(zoom[s.classId]) : undefined} title={zoom[s.classId] ? "Bấm để vào Zoom" : undefined}>
+        <div className={`flex-1 min-w-0 ${zoom[s.classId] ? "cursor-pointer" : ""}`} onClick={zoom[s.classId] ? ()=>joinZoom(s) : undefined} title={zoom[s.classId] ? "Bấm để vào Zoom" : undefined}>
           <div className="flex items-center gap-2">
             <div className="text-sm font-semibold text-stone-800 dark:text-stone-100 truncate">{s.classId}</div>
             {attended && <span className="flex-shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">✓ Đã dự</span>}
@@ -1038,14 +1049,17 @@ function AuditDashboard() {
           <div className="text-xs text-stone-400 dark:text-stone-500 truncate">{s.time} · {others.join(", ")}</div>
         </div>
         {zoom[s.classId] ? (
-          <button onClick={()=>openZoom(zoom[s.classId])} className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#2D8CFF] text-white text-[11px] font-semibold hover:bg-[#2476d6] transition"><I.video/> Zoom</button>
+          <button onClick={()=>joinZoom(s)} className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#2D8CFF] text-white text-[11px] font-semibold hover:bg-[#2476d6] transition"><I.video/> Zoom</button>
         ) : (
           <span className="flex-shrink-0 text-[10px] text-stone-400 dark:text-stone-500">chưa có link</span>
         )}
         {attended ? (
           <button onClick={()=>unmark(k)} className="flex-shrink-0 text-[11px] font-medium text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition">Hoàn tác</button>
         ) : isFuture ? (
-          <span className="flex-shrink-0 text-[10px] font-medium text-stone-400 dark:text-stone-500 px-2 py-1 rounded-full bg-stone-100 dark:bg-stone-800">Chưa diễn ra</span>
+          <span className={`flex-shrink-0 inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded-full ${soon ? "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300" : "bg-stone-100 text-stone-500 dark:bg-stone-800 dark:text-stone-400"}`}>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            {daysLeft === 1 ? "Ngày mai" : `Sắp diễn ra · ${daysLeft} ngày`}
+          </span>
         ) : (
           <button onClick={()=>markDone(k)} title="Đánh dấu đã dự" className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-emerald-600 text-white text-[11px] font-semibold hover:bg-emerald-700 transition"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Đã dự</button>
         )}
@@ -1205,7 +1219,7 @@ function AuditDashboard() {
                       <div className="text-xs text-stone-400 dark:text-stone-500">{s.time}{others.length>0 && ` · ${others.join(", ")}`}</div>
                     </div>
                     {zoom[s.classId] ? (
-                      <button onClick={()=>openZoom(zoom[s.classId])} className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[#2D8CFF] text-white text-[11px] font-semibold hover:bg-[#2476d6] transition"><I.video/> Zoom</button>
+                      <button onClick={()=>joinZoom(s)} className="flex-shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[#2D8CFF] text-white text-[11px] font-semibold hover:bg-[#2476d6] transition"><I.video/> Zoom</button>
                     ) : (
                       <span className="flex-shrink-0 text-[10px] text-stone-400 dark:text-stone-500">chưa có link</span>
                     )}
