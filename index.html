@@ -11,8 +11,8 @@
     theme: {
       extend: {
         fontFamily: {
-          sans: ['Inter', 'ui-sans-serif', 'system-ui'],
-          display: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+          sans: ['"Be Vietnam Pro"', 'Inter', 'ui-sans-serif', 'system-ui'],
+          display: ['"Plus Jakarta Sans"', '"Be Vietnam Pro"', 'ui-sans-serif', 'system-ui'],
         },
         colors: {
           accent: {
@@ -27,10 +27,10 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  html, body { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-  .font-display { font-family: 'Fraunces', Georgia, serif; }
+  html, body { font-family: 'Be Vietnam Pro', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.005em; }
+  .font-display { font-family: 'Plus Jakarta Sans', 'Be Vietnam Pro', system-ui, sans-serif; letter-spacing: -0.025em; }
   .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
   .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(120,113,108,.28); border-radius: 4px; }
   .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(120,113,108,.5); }
@@ -355,7 +355,7 @@ function Sidebar({ tab, setTab, dark, setDark, user, onLogout }) {
     { v: "home", l: "Tổng quan", i: <I.home/> },
     { v: "classes", l: "Lớp học", i: <I.book/> },
     { v: "teachers", l: "Giáo viên", i: <I.users/> },
-    ...(user === "Cô Khiết Quỳnh" ? [{ v: "audit", l: "Dự thính", i: <I.cal/> }] : []),
+    ...(user === "Cô Khiết Quỳnh" ? [{ v: "audit", l: "Dự giờ", i: <I.cal/> }] : []),
   ];
   return (
     <aside className="w-14 sm:w-52 shrink-0 border-r border-stone-200/70 dark:border-stone-800/70 bg-stone-50/70 dark:bg-[#15130f]/70 backdrop-blur-xl flex flex-col h-screen sticky top-0 z-30">
@@ -441,10 +441,15 @@ function Avatar({ teacher, size="md" }) {
 
 function PageHeader({ kicker, title, subtitle, stats }) {
   return (
-    <div className="mb-7">
-      {kicker && <div className="text-xs font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400 mb-2">{kicker}</div>}
-      <h1 className="font-display text-4xl font-semibold tracking-tight text-stone-900 dark:text-white">{title}</h1>
-      {subtitle && <p className="text-sm text-stone-500 dark:text-stone-400 mt-2">{subtitle}</p>}
+    <div className="mb-8">
+      {kicker && (
+        <div className="inline-flex items-center gap-2 mb-3">
+          <span className="w-1.5 h-1.5 rounded-full bg-accent-500"></span>
+          <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-accent-700 dark:text-accent-300">{kicker}</span>
+        </div>
+      )}
+      <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-stone-900 dark:text-white">{title}</h1>
+      {subtitle && <p className="text-stone-500 dark:text-stone-400 mt-2 text-sm">{subtitle}</p>}
       {stats && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
           {stats.map(s => (
@@ -487,9 +492,9 @@ function ClassesPage() {
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 fade-in">
       <PageHeader
-        kicker="Quản lý lớp học"
+        kicker="Quản lý"
         title="Lớp học"
-        subtitle="Tổng quan toàn bộ lớp tại trung tâm Deutsche Zeit."
+        subtitle={`${CLASSES.length} lớp tại trung tâm`}
         stats={[
           { label:"Tổng số lớp", value: CLASSES.length },
           { label:"Đang học", value: CLASSES.filter(c=>c.status==="active").length },
@@ -564,6 +569,28 @@ function ClassCard({ cls }) {
         <div className="mt-3 text-xs font-medium text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 rounded-lg px-3 py-2">⚠ {cls.note}</div>
       )}
 
+      {cls.status === "active" && (() => {
+        let total = 0, remaining = 0;
+        cls.teachers.forEach(t => {
+          const m = (t.sessions || "").match(/(\d+)\s*\/\s*(\d+)/);
+          if (m) { remaining += parseInt(m[1]); total += parseInt(m[2]); }
+        });
+        if (!total) return null;
+        const done = total - remaining;
+        const pct = Math.round(done / total * 100);
+        return (
+          <div className="mt-4 pt-4 border-t border-stone-100 dark:border-stone-800">
+            <div className="flex items-baseline justify-between mb-1.5">
+              <span className="text-[11px] uppercase tracking-wider font-semibold text-stone-400 dark:text-stone-500">Tiến độ</span>
+              <span className="text-xs font-semibold text-stone-700 dark:text-stone-200 tabular-nums">{done}/{total} buổi · {pct}%</span>
+            </div>
+            <div className="h-2 rounded-full bg-stone-100 dark:bg-stone-800 overflow-hidden">
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: pct + "%", background: cc.dot }}></div>
+            </div>
+          </div>
+        );
+      })()}
+
       <div className="mt-4 pt-4 border-t border-stone-100 dark:border-stone-800">
         <div className="text-[11px] uppercase tracking-wider font-semibold text-stone-400 dark:text-stone-500 mb-2">Giáo viên</div>
         <div className="space-y-2">
@@ -606,9 +633,9 @@ function TeachersPage({ user }) {
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 fade-in">
       <PageHeader
-        kicker="Đội ngũ giảng dạy"
+        kicker="Đội ngũ"
         title="Giáo viên"
-        subtitle="Lịch dạy và khối lượng công việc của từng giáo viên."
+        subtitle={`${TEACHERS.length} giáo viên`}
         stats={[
           { label:"Giáo viên", value: TEACHERS.length },
           { label:"Tổng buổi còn lại", value: TEACHERS.reduce((a,t)=>a+t.totalSessions,0) },
@@ -659,6 +686,24 @@ function TeacherCard({ teacher, maxLoad, onOpen }) {
         </div>
       </div>
 
+      {(() => {
+        const today = new Date(); today.setHours(0,0,0,0);
+        const DAY_VN = ["CN","T2","T3","T4","T5","T6","T7"];
+        const next = teacher.schedule.find(s => new Date(s.date) >= today);
+        if (!next) return null;
+        const d = new Date(next.date);
+        const cl = classColor(next.classId);
+        return (
+          <div className="relative flex items-center gap-2 mb-4 px-3 py-2 rounded-xl bg-stone-50 dark:bg-stone-800/50 border border-stone-100 dark:border-stone-800">
+            <span className="w-1 self-stretch rounded-full" style={{ background: cl.dot }}></span>
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] uppercase tracking-wider font-semibold text-stone-400 dark:text-stone-500">Buổi kế tiếp</div>
+              <div className="text-xs font-semibold text-stone-700 dark:text-stone-200 truncate">{DAY_VN[d.getDay()]} {String(d.getDate()).padStart(2,"0")}/{String(d.getMonth()+1).padStart(2,"0")} · {next.classId}</div>
+            </div>
+          </div>
+        );
+      })()}
+
       <div className="relative flex flex-wrap gap-1.5 mb-4">
         {teacher.classes.map(cid => {
           const cl = classColor(cid);
@@ -690,7 +735,7 @@ const ALL_SESSIONS = (() => {
   return Object.values(map).sort((a,b) => a.date.localeCompare(b.date) || a.classId.localeCompare(b.classId));
 })();
 
-/* Modal chọn buổi dự thính */
+/* Modal chọn buổi dự giờ */
 function AuditPicker({ owner, focusTeacher, audit, setAudit, onClose }) {
   const [q, setQ] = useState("");
   const [zoom] = useZoom();
@@ -721,7 +766,7 @@ function AuditPicker({ owner, focusTeacher, audit, setAudit, onClose }) {
         <div className="px-5 py-4 border-b border-stone-100 dark:border-stone-800">
           <div className="flex items-center justify-between gap-2">
             <div>
-              <div className="font-display text-lg font-semibold text-stone-900 dark:text-white">Chọn buổi dự thính</div>
+              <div className="font-display text-lg font-semibold text-stone-900 dark:text-white">Chọn buổi dự giờ</div>
               <div className="text-xs text-stone-400 dark:text-stone-500 mt-0.5">{focusTeacher ? `Dự giờ ${focusTeacher.name}` : "Theo giáo viên"} · đã chọn {audit.length} buổi</div>
             </div>
             <button onClick={onClose} className="w-9 h-9 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-center text-stone-500"><I.x/></button>
@@ -779,23 +824,23 @@ function CalendarModal({ teacher, onClose, user }) {
   const AUDIT_OWNER = "Cô Khiết Quỳnh";
   const QUYNH = TEACHERS.find(t => t.name === AUDIT_OWNER);
   const isQuynh = teacher.name === AUDIT_OWNER;
-  const canAudit = user === AUDIT_OWNER; // đăng nhập là Khiết Quỳnh → quản lý dự thính ở mọi lịch
+  const canAudit = user === AUDIT_OWNER; // đăng nhập là Khiết Quỳnh → quản lý dự giờ ở mọi lịch
   const [idx, setIdx] = useState(0);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [confirmDay, setConfirmDay] = useState(null); // {own:[...]} khi bấm 1 ngày
 
-  // Dự thính — lưu localStorage theo tên cô
+  // Dự giờ — lưu localStorage theo tên cô
   const STORAGE_KEY = "dz_audit_" + AUDIT_OWNER;
   const [audit, setAudit] = useState(() => {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch (e) { return []; }
   });
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(audit)); } catch (e) {} }, [audit]);
 
-  // các buổi dự thính (đã chọn) -> object đầy đủ
+  // các buổi dự giờ (đã chọn) -> object đầy đủ
   const myAudit = canAudit ? ALL_SESSIONS.filter(s => audit.includes(s.date + "|" + s.classId)) : [];
   const auditSessions = isQuynh ? myAudit : myAudit.filter(s => s.teachers.includes(teacher.name));
 
-  // phạm vi tháng = gộp buổi dạy + buổi dự thính
+  // phạm vi tháng = gộp buổi dạy + buổi dự giờ
   const allDates = [...teacher.schedule.map(s => new Date(s.date)), ...auditSessions.map(s => new Date(s.date))].sort((a,b) => a-b);
   const minD = allDates[0]; const maxD = allDates[allDates.length-1];
   const months = [];
@@ -834,12 +879,12 @@ function CalendarModal({ teacher, onClose, user }) {
           <Avatar teacher={teacher} size="lg"/>
           <div className="flex-1 min-w-0">
             <div className="font-display text-lg font-semibold tracking-tight text-stone-900 dark:text-white">{teacher.name}</div>
-            <div className="text-xs text-stone-400 dark:text-stone-500">Kalender · {teacher.totalSessions} buổi · {teacher.totalClasses} lớp{canAudit && audit.length>0 && <span> · <span className="text-accent-600 dark:text-accent-400 font-medium">{audit.length} dự thính</span></span>}</div>
+            <div className="text-xs text-stone-400 dark:text-stone-500">Kalender · {teacher.totalSessions} buổi · {teacher.totalClasses} lớp{canAudit && audit.length>0 && <span> · <span className="text-accent-600 dark:text-accent-400 font-medium">{audit.length} dự giờ</span></span>}</div>
           </div>
           {canAudit && (
           <button onClick={()=>setPickerOpen(true)} className="px-3 py-2 rounded-full bg-accent-50 dark:bg-accent-700/20 text-accent-700 dark:text-accent-300 text-xs font-semibold hover:bg-accent-100 dark:hover:bg-accent-700/30 transition flex items-center gap-1.5 border border-accent-200 dark:border-accent-700/40">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-            Dự thính
+            Dự giờ
           </button>
           )}
           <button onClick={onClose} className="w-9 h-9 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-center text-stone-500"><I.x/></button>
@@ -855,7 +900,7 @@ function CalendarModal({ teacher, onClose, user }) {
           <div className="p-6 overflow-auto scrollbar-thin">
             {canAudit && !isQuynh && (
               <div className="mb-3 text-xs text-accent-700 dark:text-accent-300 bg-accent-50 dark:bg-accent-700/15 rounded-lg px-3 py-2 flex items-center gap-1.5">
-                <span>💡</span> Bấm vào ngày có lớp để đăng ký / bỏ dự thính.
+                <span>💡</span> Bấm vào ngày có lớp để đăng ký / bỏ dự giờ.
               </div>
             )}
             <div className="grid grid-cols-7 gap-1.5 text-center text-[11px] font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-wider mb-2">
@@ -870,13 +915,13 @@ function CalendarModal({ teacher, onClose, user }) {
                 const hasAud = aud.length > 0;
                 const cl = hasOwn ? classColor(own[0].classId) : null;
                 const style = hasOwn ? { ['--bg-l']:cl.bg, ['--bg-d']:cl.bgDark, ['--text-l']:cl.text, ['--text-d']:cl.textDark } : {};
-                // Bấm để dự thính: chỉ khi đăng nhập là Khiết Quỳnh và đang xem lịch cô KHÁC, ngày đó có lớp
+                // Bấm để dự giờ: chỉ khi đăng nhập là Khiết Quỳnh và đang xem lịch cô KHÁC, ngày đó có lớp
                 const canClick = canAudit && !isQuynh && hasOwn;
                 const onClickCell = canClick ? () => setConfirmDay({ own }) : undefined;
                 return (
                   <div key={i} style={style}
                     onClick={onClickCell}
-                    title={canClick ? (hasAud ? "Bỏ dự thính" : "Bấm để dự thính") : undefined}
+                    title={canClick ? (hasAud ? "Bỏ dự giờ" : "Bấm để dự giờ") : undefined}
                     className={`aspect-square rounded-xl p-1.5 flex flex-col gap-0.5 text-left transition relative ${canClick ? "cursor-pointer" : ""} ${
                       hasOwn ? "cal-cell hover:scale-[1.04]"
                              : hasAud ? "border-2 border-dashed border-accent-400 text-accent-700 dark:text-accent-300 dark:border-accent-500"
@@ -897,7 +942,7 @@ function CalendarModal({ teacher, onClose, user }) {
                   const cl = classColor(cid);
                   return <div key={cid} className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-md" style={{ background: cl.dot }}></span><span className="text-stone-600 dark:text-stone-300 font-medium">{cid}</span></div>;
                 })}
-                {canAudit && audit.length>0 && <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-md border-2 border-dashed border-accent-500"></span><span className="text-accent-600 dark:text-accent-300 font-medium">Dự thính</span></div>}
+                {canAudit && audit.length>0 && <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-md border-2 border-dashed border-accent-500"></span><span className="text-accent-600 dark:text-accent-300 font-medium">Dự giờ</span></div>}
               </div>
             </div>
           </div>
@@ -905,7 +950,7 @@ function CalendarModal({ teacher, onClose, user }) {
           <div className="border-t lg:border-t-0 lg:border-l border-stone-100 dark:border-stone-800 overflow-auto scrollbar-thin bg-stone-50/50 dark:bg-stone-950/30">
             <div className="px-4 py-3 sticky top-0 bg-white/90 dark:bg-stone-900/90 backdrop-blur border-b border-stone-100 dark:border-stone-800">
               <div className="text-[11px] font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-wider">Tháng {month.getMonth()+1}</div>
-              <div className="text-sm font-display font-semibold text-stone-900 dark:text-white mt-0.5">{monthSessions.length} buổi dạy{monthAudit.length>0 && ` · ${monthAudit.length} dự thính`}</div>
+              <div className="text-sm font-display font-semibold text-stone-900 dark:text-white mt-0.5">{monthSessions.length} buổi dạy{monthAudit.length>0 && ` · ${monthAudit.length} dự giờ`}</div>
             </div>
             <div className="p-3 space-y-1.5">
               {monthSessions.length === 0 && monthAudit.length === 0 && <div className="text-sm text-stone-400 text-center py-10">Không có buổi nào.</div>}
@@ -930,7 +975,7 @@ function CalendarModal({ teacher, onClose, user }) {
               })}
               {monthAudit.length > 0 && (
                 <div className="pt-2">
-                  <div className="px-1 pb-1 text-[11px] font-semibold text-accent-600 dark:text-accent-400 uppercase tracking-wider">Dự thính</div>
+                  <div className="px-1 pb-1 text-[11px] font-semibold text-accent-600 dark:text-accent-400 uppercase tracking-wider">Dự giờ</div>
                   {monthAudit.map((sess, i) => {
                     const cls = CLASSES.find(c => c.id === sess.classId);
                     const others = sess.teachers.filter(t => t !== teacher.name);
@@ -948,7 +993,7 @@ function CalendarModal({ teacher, onClose, user }) {
                         ) : (
                           <span className="self-center flex-shrink-0 text-[10px] text-stone-400 dark:text-stone-500">chưa có link</span>
                         )}
-                        <button onClick={()=>{ if(window.confirm("Bỏ buổi dự thính này?")) setAudit(a=>a.filter(x=>x!==sess.date+"|"+sess.classId)); }} className="self-center text-stone-300 hover:text-rose-500 transition flex-shrink-0"><I.x/></button>
+                        <button onClick={()=>{ if(window.confirm("Bỏ buổi dự giờ này?")) setAudit(a=>a.filter(x=>x!==sess.date+"|"+sess.classId)); }} className="self-center text-stone-300 hover:text-rose-500 transition flex-shrink-0"><I.x/></button>
                       </div>
                     );
                   })}
@@ -976,7 +1021,7 @@ function CalendarModal({ teacher, onClose, user }) {
             <div className="bg-white dark:bg-stone-900 rounded-3xl w-full max-w-xs overflow-hidden shadow-2xl border border-stone-200 dark:border-stone-800" onClick={e=>e.stopPropagation()}>
               <div className="px-5 pt-5 pb-3 text-center">
                 <div className="text-3xl mb-2">{isAud ? "🗑️" : "📌"}</div>
-                <div className="font-display text-lg font-semibold text-stone-900 dark:text-white">{isAud ? "Bỏ dự thính?" : "Dự thính buổi này?"}</div>
+                <div className="font-display text-lg font-semibold text-stone-900 dark:text-white">{isAud ? "Bỏ dự giờ?" : "Dự giờ buổi này?"}</div>
               </div>
               <div className="px-5 pb-2">
                 <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl border border-stone-100 dark:border-stone-800 bg-stone-50 dark:bg-stone-800/40">
@@ -997,7 +1042,7 @@ function CalendarModal({ teacher, onClose, user }) {
               </div>
               <div className="px-5 py-4 flex gap-2">
                 <button onClick={()=>setConfirmDay(null)} className="flex-1 py-2 rounded-full text-sm font-medium border border-stone-200 dark:border-stone-800 hover:bg-stone-100 dark:hover:bg-stone-800 transition">Huỷ</button>
-                <button onClick={doConfirm} className={`flex-1 py-2 rounded-full text-sm font-semibold text-white transition ${isAud ? "bg-rose-600 hover:bg-rose-700" : "bg-accent-600 hover:bg-accent-700"}`}>{isAud ? "Bỏ dự thính" : "Dự thính"}</button>
+                <button onClick={doConfirm} className={`flex-1 py-2 rounded-full text-sm font-semibold text-white transition ${isAud ? "bg-rose-600 hover:bg-rose-700" : "bg-accent-600 hover:bg-accent-700"}`}>{isAud ? "Bỏ dự giờ" : "Dự giờ"}</button>
               </div>
             </div>
           </div>
@@ -1007,12 +1052,56 @@ function CalendarModal({ teacher, onClose, user }) {
   );
 }
 
-/* ===== Trang tổng kết dự thính (Cô Khiết Quỳnh) ===== */
+/* ===== Trang tổng kết dự giờ (Cô Khiết Quỳnh) ===== */
 const AUDIT_KEY = "dz_audit_Cô Khiết Quỳnh";
 const loadAudit = () => { try { return JSON.parse(localStorage.getItem(AUDIT_KEY)) || []; } catch (e) { return []; } };
 const AUDIT_DONE_KEY = "dz_audit_done";
 const loadDone = () => { try { return JSON.parse(localStorage.getItem(AUDIT_DONE_KEY)) || []; } catch (e) { return []; } };
 const openZoom = (url) => { if (url && window.confirm("Vào phòng Zoom của lớp này?")) window.open(url, "_blank", "noopener"); };
+
+function AuditHero() {
+  return (
+    <div className="relative overflow-hidden rounded-[1.75rem] mb-8 shadow-xl" style={{ background: "linear-gradient(135deg, #173a2f 0%, #275a48 55%, #3a8068 100%)" }}>
+      {/* texture chấm phấn */}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.12]" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="chk" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="0.6" fill="white"/></pattern></defs><rect width="100%" height="100%" fill="url(#chk)"/></svg>
+      {/* đồng hồ */}
+      <div className="absolute right-8 top-6 hidden sm:block opacity-90">
+        <svg width="120" height="120" viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="54" fill="none" stroke="#f5f5dc" strokeWidth="3"/>
+          <circle cx="70" cy="70" r="3.5" fill="#f5f5dc"/>
+          <line x1="70" y1="70" x2="70" y2="32" stroke="#f5f5dc" strokeWidth="3" strokeLinecap="round"/>
+          <line x1="70" y1="70" x2="98" y2="76" stroke="#f5f5dc" strokeWidth="2.5" strokeLinecap="round"/>
+          <g stroke="#f5f5dc" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="70" y1="18" x2="70" y2="28"/>
+            <line x1="122" y1="70" x2="112" y2="70"/>
+            <line x1="70" y1="122" x2="70" y2="112"/>
+            <line x1="18" y1="70" x2="28" y2="70"/>
+          </g>
+        </svg>
+      </div>
+      {/* sách chồng */}
+      <div className="absolute -left-2 -bottom-3 hidden sm:block opacity-90 rotate-[-8deg]">
+        <svg width="120" height="80" viewBox="0 0 160 100">
+          <rect x="10" y="60" width="120" height="14" rx="2" fill="#c25a3c"/>
+          <rect x="15" y="60" width="3" height="14" fill="#9c4530"/>
+          <rect x="22" y="60" width="3" height="14" fill="#9c4530"/>
+          <rect x="20" y="42" width="115" height="14" rx="2" fill="#d4a056"/>
+          <rect x="25" y="42" width="3" height="14" fill="#a87a36"/>
+          <rect x="32" y="42" width="3" height="14" fill="#a87a36"/>
+          <rect x="5" y="24" width="125" height="14" rx="2" fill="#5e7e73"/>
+          <rect x="11" y="24" width="3" height="14" fill="#3e5e53"/>
+          <rect x="18" y="24" width="3" height="14" fill="#3e5e53"/>
+        </svg>
+      </div>
+      {/* nội dung */}
+      <div className="relative p-8 sm:p-10 text-white">
+        <div className="text-[11px] uppercase tracking-[0.25em] text-white/70 mb-3 font-semibold">Phòng dự giờ</div>
+        <h1 className="font-display text-3xl sm:text-4xl font-bold leading-tight">Dự giờ của tôi</h1>
+        <p className="text-white/75 mt-2 text-sm">Cô Khiết Quỳnh</p>
+      </div>
+    </div>
+  );
+}
 
 function AuditDashboard() {
   const [zoom] = useZoom();
@@ -1023,8 +1112,8 @@ function AuditDashboard() {
   const DAY_VN = ["CN","T2","T3","T4","T5","T6","T7"];
   const saveList = (next) => { setList(next); try { localStorage.setItem(AUDIT_KEY, JSON.stringify(next)); } catch (e) {} };
   const saveDone = (next) => { setDone(next); try { localStorage.setItem(AUDIT_DONE_KEY, JSON.stringify(next)); } catch (e) {} };
-  const remove = (k) => { if (!window.confirm("Bỏ buổi này khỏi danh sách dự thính?")) return; saveList(list.filter(x => x !== k)); saveDone(done.filter(x => x !== k)); };
-  const markDone = (k) => { if (window.confirm("Xác nhận: bạn đã dự thính buổi này?")) saveDone([...done, k]); };
+  const remove = (k) => { if (!window.confirm("Bỏ buổi này khỏi danh sách dự giờ?")) return; saveList(list.filter(x => x !== k)); saveDone(done.filter(x => x !== k)); };
+  const markDone = (k) => { if (window.confirm("Xác nhận: bạn đã dự giờ buổi này?")) saveDone([...done, k]); };
   const unmark = (k) => { if (window.confirm("Bỏ đánh dấu đã dự buổi này?")) saveDone(done.filter(x => x !== k)); };
   const joinZoom = (s) => {
     const url = zoom[s.classId];
@@ -1106,7 +1195,7 @@ function AuditDashboard() {
     );
   };
 
-  // Lịch tháng cho các buổi dự thính
+  // Lịch tháng cho các buổi dự giờ
   const cal = (() => {
     if (!sessions.length) return null;
     const ds = sessions.map(s => new Date(s.date)).sort((a,b) => a-b);
@@ -1128,17 +1217,25 @@ function AuditDashboard() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 fade-in">
-      <PageHeader kicker="Cô Khiết Quỳnh" title="Dự thính của tôi" subtitle="Tổng kết các buổi bạn đăng ký dự giờ."
-        stats={[
-          { label:"Tổng buổi", value: sessions.length },
-          { label:"Cần dự", value: pending.length },
-          { label:"Đã dự", value: attended.length },
-          { label:"Số lớp", value: classes.length },
-        ]}/>
+      <AuditHero/>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+        {[
+          { label:"Tổng buổi", value: sessions.length, dot:"#3a8a5a" },
+          { label:"Cần dự", value: pending.length, dot:"#c08b2e" },
+          { label:"Đã dự", value: attended.length, dot:"#5e7e73" },
+          { label:"Số lớp", value: classes.length, dot:"#3878b8" },
+        ].map(s => (
+          <div key={s.label} className="relative rounded-2xl border border-stone-200/70 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-3.5 card-shadow hover-lift overflow-hidden">
+            <div className="absolute right-0 top-0 w-20 h-20 rounded-full blur-2xl opacity-25 -mr-6 -mt-6" style={{ background: s.dot }}></div>
+            <div className="relative flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ background: s.dot }}></span><span className="text-[11px] font-medium uppercase tracking-wider text-stone-400 dark:text-stone-500">{s.label}</span></div>
+            <div className="relative font-display text-2xl font-bold text-stone-900 dark:text-white mt-1 tabular-nums">{s.value}</div>
+          </div>
+        ))}
+      </div>
 
       {sessions.length === 0 && (
         <div className="text-center py-16 text-sm text-stone-400 dark:text-stone-500">
-          Chưa đăng ký buổi dự thính nào.<br/>Vào tab <b>Giáo viên</b> → mở lịch một cô → bấm <b>“＋ Dự thính”</b>.
+          Chưa đăng ký buổi dự giờ nào.<br/>Vào tab <b>Giáo viên</b> → mở lịch một cô → bấm <b>“＋ Dự giờ”</b>.
         </div>
       )}
 
@@ -1177,7 +1274,7 @@ function AuditDashboard() {
       {cal && (
         <div className="mb-8 max-w-md">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-display text-lg font-semibold text-stone-900 dark:text-white">Lịch dự thính</h2>
+            <h2 className="font-display text-lg font-semibold text-stone-900 dark:text-white">Lịch dự giờ</h2>
             <div className="flex items-center gap-1.5">
               <button disabled={cal.safe===0} onClick={()=>setMIdx(i=>Math.max(0,i-1))} className="w-8 h-8 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-stone-500"><I.chevL/></button>
               <span className="text-sm font-medium capitalize w-36 text-center text-stone-700 dark:text-stone-200">{cal.month.toLocaleDateString("vi-VN",{month:"long",year:"numeric"})}</span>
@@ -1229,7 +1326,7 @@ function AuditDashboard() {
 
       {attended.length > 0 && (
         <div>
-          <h2 className="font-display text-lg font-semibold text-stone-900 dark:text-white mb-3">Đã dự thính <span className="text-sm text-stone-400 font-sans font-normal">· {attended.length}</span></h2>
+          <h2 className="font-display text-lg font-semibold text-stone-900 dark:text-white mb-3">Đã dự giờ <span className="text-sm text-stone-400 font-sans font-normal">· {attended.length}</span></h2>
           <div className="space-y-2">{attended.map(s => <Row key={s.date+s.classId} s={s} attended/>)}</div>
         </div>
       )}
@@ -1345,7 +1442,7 @@ function HomePage({ go, user }) {
           <div className="flex flex-wrap gap-2.5 mt-6">
             <button onClick={()=>go("classes")} className="px-4 py-2 rounded-full bg-white text-[#b5462f] text-sm font-semibold hover:bg-white/90 transition">Xem lớp học →</button>
             <button onClick={()=>go("teachers")} className="px-4 py-2 rounded-full bg-white/15 text-white text-sm font-semibold hover:bg-white/25 transition border border-white/20">Giáo viên</button>
-            {user === "Cô Khiết Quỳnh" && <button onClick={()=>go("audit")} className="px-4 py-2 rounded-full bg-[#f5b328] text-[#3a2a05] text-sm font-semibold hover:bg-[#e0a420] transition">Dự thính của tôi</button>}
+            {user === "Cô Khiết Quỳnh" && <button onClick={()=>go("audit")} className="px-4 py-2 rounded-full bg-[#f5b328] text-[#3a2a05] text-sm font-semibold hover:bg-[#e0a420] transition">Dự giờ của tôi</button>}
           </div>
         </div>
       </div>
