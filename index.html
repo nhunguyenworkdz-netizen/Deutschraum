@@ -45,6 +45,13 @@
   .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(28,25,23,.05), 0 16px 32px -12px rgba(28,25,23,.18); }
   .app-bg { background: radial-gradient(900px 460px at 100% -6%, #e9ebfa 0%, transparent 55%), radial-gradient(700px 380px at 0% 100%, #f3eee6 0%, transparent 55%), #faf9f7; background-attachment: fixed; }
   html.dark .app-bg { background: radial-gradient(900px 460px at 100% -6%, #221f33 0%, transparent 55%), radial-gradient(700px 380px at 0% 100%, #1c1a18 0%, transparent 55%), #141210; background-attachment: fixed; }
+  /* Print: chỉ hiện phiếu, ẩn mọi thứ khác */
+  @media print {
+    body * { visibility: hidden !important; }
+    .print-area, .print-area * { visibility: visible !important; }
+    .print-area { position: absolute !important; left: 0; top: 0; width: 100%; padding: 24px !important; background: white !important; }
+    html.dark .print-area { color: #000 !important; }
+  }
 </style>
 </head>
 <body class="app-bg text-stone-800 dark:text-stone-100 transition-colors">
@@ -355,7 +362,7 @@ function Sidebar({ tab, setTab, dark, setDark, user, onLogout }) {
     { v: "home", l: "Tổng quan", i: <I.home/> },
     { v: "classes", l: "Lớp học", i: <I.book/> },
     { v: "teachers", l: "Giáo viên", i: <I.users/> },
-    ...(user === "Cô Khiết Quỳnh" ? [{ v: "audit", l: "Dự giờ", i: <I.cal/> }] : []),
+    ...(user === "Cô Khiết Quỳnh" ? [{ v: "audit", l: "Dự giờ", i: <I.cal/> }, { v: "sched", l: "Xếp lịch dự thính", i: <I.edit/> }] : []),
   ];
   return (
     <aside className="w-14 sm:w-52 shrink-0 border-r border-stone-200/70 dark:border-stone-800/70 bg-stone-50/70 dark:bg-[#15130f]/70 backdrop-blur-xl flex flex-col h-screen sticky top-0 z-30">
@@ -1509,6 +1516,202 @@ function HomePage({ go, user }) {
   );
 }
 
+/* ===== Xếp lịch dự giờ cho các cô (admin) ===== */
+const SCHED_KEY = "dz_cross_schedule";
+const loadSched = () => { try { return JSON.parse(localStorage.getItem(SCHED_KEY)) || {}; } catch (e) { return {}; } };
+const saveSched = (m) => { try { localStorage.setItem(SCHED_KEY, JSON.stringify(m)); } catch (e) {} };
+
+function SlipModal({ teacher, audit, onClose }) {
+  const [zoom] = useZoom();
+  const DAY_VN = ["CN","T2","T3","T4","T5","T6","T7"];
+  const sessions = ALL_SESSIONS.filter(s => audit.includes(s.date + "|" + s.classId)).sort((a,b) => a.date.localeCompare(b.date));
+
+  const buildText = () => {
+    const lines = [];
+    lines.push("📋 PHIẾU LỊCH DỰ THÍNH");
+    lines.push("DEUTSCHE ZEIT · Sprachzentrum");
+    lines.push("");
+    lines.push("Kính gửi: " + teacher.name);
+    lines.push("Tổng: " + sessions.length + " buổi");
+    lines.push("──────────────────────");
+    sessions.forEach((s, i) => {
+      const d = new Date(s.date);
+      const others = (s.teachers || []).filter(x => x !== teacher.name).join(", ");
+      lines.push((i+1) + ". " + DAY_VN[d.getDay()] + " " + formatDate(s.date) + " · " + s.time);
+      lines.push("   Lớp: " + s.classId + (others ? " · Cô dạy: " + others : ""));
+      if (zoom[s.classId]) lines.push("   🎥 Zoom: " + zoom[s.classId]);
+    });
+    lines.push("──────────────────────");
+    lines.push("Vui lòng vào đúng giờ. Cảm ơn cô! 🌸");
+    return lines.join("\n");
+  };
+
+  const copyText = async () => {
+    const text = buildText();
+    try { await navigator.clipboard.writeText(text); alert("✓ Đã sao chép phiếu. Dán vào Zalo/Email/Messenger để gửi cho cô."); }
+    catch (e) { alert("Không sao chép được. Bạn có thể chọn thủ công bằng cách bôi đen nội dung phiếu."); }
+  };
+  const doPrint = () => window.print();
+
+  useEffect(() => {
+    const h = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-stone-900/50 dark:bg-black/80 backdrop-blur-sm fade-in" onClick={onClose}>
+      <div className="bg-white dark:bg-stone-900 rounded-3xl w-full max-w-md max-h-[92vh] overflow-hidden shadow-2xl border border-stone-200 dark:border-stone-800 flex flex-col" onClick={e => e.stopPropagation()}>
+        <div className="px-5 py-3.5 border-b border-stone-100 dark:border-stone-800 flex items-center justify-between print:hidden">
+          <div className="font-display text-base font-bold text-stone-900 dark:text-white">Phiếu lịch dự thính</div>
+          <button onClick={onClose} className="w-8 h-8 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 flex items-center justify-center text-stone-500"><I.x/></button>
+        </div>
+
+        <div className="print-area overflow-auto p-6 bg-white text-stone-800 flex-1">
+          <div className="text-center mb-5">
+            <div className="text-[10px] uppercase tracking-[0.25em] text-stone-400 font-bold">Deutsche Zeit · Sprachzentrum</div>
+            <div className="font-display text-xl font-extrabold mt-1 text-[#2c2e7a]">📋 PHIẾU LỊCH DỰ THÍNH</div>
+          </div>
+          <div className="flex items-center gap-3 mb-4 pb-4 border-b border-stone-200">
+            <Avatar teacher={teacher} size="lg"/>
+            <div className="flex-1 min-w-0">
+              <div className="text-xs text-stone-500">Kính gửi</div>
+              <div className="font-bold text-base text-stone-900">{teacher.name}</div>
+              <div className="text-xs text-stone-500 mt-0.5">Tổng: <b>{sessions.length} buổi</b></div>
+            </div>
+          </div>
+          {sessions.length === 0 ? (
+            <div className="text-center text-sm text-stone-400 py-8">Chưa có buổi nào.</div>
+          ) : (
+            <div className="space-y-2">
+              {sessions.map((s, i) => {
+                const d = new Date(s.date);
+                const cl = classColor(s.classId);
+                const others = (s.teachers || []).filter(x => x !== teacher.name).join(", ");
+                return (
+                  <div key={s.date + s.classId} className="flex gap-3 p-2.5 rounded-lg border border-stone-100" style={{ borderLeft: "4px solid " + cl.dot }}>
+                    <div className="flex flex-col items-center justify-center w-12 h-12 rounded-lg flex-shrink-0" style={{ background: cl.bg, color: cl.text }}>
+                      <div className="text-[9px] font-bold uppercase opacity-70">{DAY_VN[d.getDay()]}</div>
+                      <div className="text-sm font-bold leading-none">{String(d.getDate()).padStart(2,"0")}/{String(d.getMonth()+1).padStart(2,"0")}</div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-bold text-stone-900">{s.classId}</div>
+                      <div className="text-xs text-stone-500">{s.time}{others && " · " + others}</div>
+                      {zoom[s.classId] && (
+                        <div className="text-[11px] text-[#2D8CFF] font-semibold mt-0.5 truncate">🎥 {zoom[s.classId]}</div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <div className="mt-5 pt-4 border-t border-stone-200 text-xs text-stone-500 text-center italic">Vui lòng vào đúng giờ. Cảm ơn cô! 🌸</div>
+        </div>
+
+        <div className="px-5 py-3 border-t border-stone-100 dark:border-stone-800 flex gap-2 print:hidden">
+          <button onClick={copyText} className="flex-1 py-2 rounded-full border border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 text-sm font-medium transition">Sao chép</button>
+          <button onClick={doPrint} className="flex-1 py-2 rounded-full bg-accent-600 hover:bg-accent-700 text-white text-sm font-semibold transition">In / Lưu PDF</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SchedulerPage() {
+  const [zoom] = useZoom();
+  const [sched, setSched] = useState(loadSched);
+  const [pickerFor, setPickerFor] = useState(null);
+  const [slipFor, setSlipFor] = useState(null);
+  const DAY_VN = ["CN","T2","T3","T4","T5","T6","T7"];
+
+  const updateFor = (name, listOrFn) => {
+    setSched(prev => {
+      const cur = prev[name] || [];
+      const next = typeof listOrFn === "function" ? listOrFn(cur) : listOrFn;
+      const m = { ...prev, [name]: next };
+      saveSched(m);
+      return m;
+    });
+  };
+
+  const total = Object.values(sched).reduce((a, v) => a + (v ? v.length : 0), 0);
+  const participating = Object.keys(sched).filter(k => sched[k] && sched[k].length > 0).length;
+
+  return (
+    <div className="max-w-6xl mx-auto px-6 py-10 fade-in">
+      <PageHeader
+        kicker="Quản lý"
+        title="Xếp lịch dự thính"
+        subtitle="Phân công các cô dự thính qua lại"
+        stats={[
+          { label:"Tổng phân công", value: total },
+          { label:"Cô tham gia", value: participating },
+          { label:"Tổng giáo viên", value: TEACHERS.length },
+          { label:"Lớp đang chạy", value: CLASSES.filter(c=>c.status!=="finished").length },
+        ]}
+      />
+
+      <div className="space-y-3">
+        {TEACHERS.map(t => {
+          const list = sched[t.name] || [];
+          const sessions = ALL_SESSIONS.filter(s => list.includes(s.date + "|" + s.classId)).sort((a,b)=>a.date.localeCompare(b.date));
+          return (
+            <div key={t.name} className="rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-4 sm:p-5 card-shadow hover-lift">
+              <div className="flex items-center gap-4">
+                <Avatar teacher={t} size="lg"/>
+                <div className="flex-1 min-w-0">
+                  <div className="font-display text-lg font-bold text-stone-900 dark:text-white truncate">{t.name}</div>
+                  <div className="text-xs text-stone-500 dark:text-stone-400">Đi dự: <b className="text-stone-700 dark:text-stone-200">{list.length} buổi</b></div>
+                </div>
+                <div className="flex items-center gap-2">
+                  {list.length > 0 && (
+                    <button onClick={()=>setSlipFor(t)} className="px-3 py-2 rounded-full border border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 text-sm font-medium transition flex items-center gap-1.5">
+                      📋 Phiếu
+                    </button>
+                  )}
+                  <button onClick={()=>setPickerFor(t)} className="px-3.5 py-2 rounded-full bg-accent-600 hover:bg-accent-700 text-white text-sm font-semibold transition flex items-center gap-1.5">
+                    <I.plus/> Xếp lịch
+                  </button>
+                </div>
+              </div>
+              {sessions.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-stone-100 dark:border-stone-800 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5">
+                  {sessions.map(s => {
+                    const cl = classColor(s.classId);
+                    const d = new Date(s.date);
+                    const owner = (s.teachers || []).filter(x => x !== t.name).join(", ");
+                    return (
+                      <div key={s.date+s.classId} className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-stone-50 dark:bg-stone-800/40 border border-stone-100 dark:border-stone-800">
+                        <span className="w-1 self-stretch rounded-full" style={{ background: cl.dot }}></span>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-xs font-semibold text-stone-800 dark:text-stone-100 truncate">{DAY_VN[d.getDay()]} {String(d.getDate()).padStart(2,"0")}/{String(d.getMonth()+1).padStart(2,"0")} · {s.classId}</div>
+                          <div className="text-[10px] text-stone-400 dark:text-stone-500 truncate">{s.time}{owner && ` · dự cô ${owner}`}</div>
+                        </div>
+                        <button onClick={()=>{ if(window.confirm("Bỏ buổi này khỏi lịch dự của " + t.name + "?")) updateFor(t.name, a => a.filter(x => x !== s.date+"|"+s.classId)); }} title="Bỏ" className="text-stone-300 hover:text-rose-500 transition flex-shrink-0"><I.x/></button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {pickerFor && (
+        <AuditPicker owner={pickerFor} focusTeacher={null}
+          audit={sched[pickerFor.name] || []}
+          setAudit={(fn) => updateFor(pickerFor.name, fn)}
+          onClose={()=>setPickerFor(null)}/>
+      )}
+      {slipFor && (
+        <SlipModal teacher={slipFor} audit={sched[slipFor.name] || []} onClose={()=>setSlipFor(null)}/>
+      )}
+    </div>
+  );
+}
+
 /* ============ APP ============ */
 function App() {
   const [tab, setTab] = useState("home");
@@ -1542,6 +1745,7 @@ function App() {
         {tab === "classes" && <ClassesPage/>}
         {tab === "teachers" && <TeachersPage user={user}/>}
         {tab === "audit" && <AuditDashboard/>}
+        {tab === "sched" && <SchedulerPage/>}
       </main>
     </div>
   );
