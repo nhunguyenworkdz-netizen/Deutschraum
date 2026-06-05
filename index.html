@@ -61,6 +61,60 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
 
+<!-- Firebase Realtime Database — đồng bộ dữ liệu giữa các máy -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
+<script>
+(function(){
+  const firebaseConfig = {
+    apiKey: "AIzaSyDh8zUnX5fSmHghECwX1tbTKAZ1hnF4uDw",
+    authDomain: "deutschraum-521e8.firebaseapp.com",
+    databaseURL: "https://deutschraum-521e8-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "deutschraum-521e8",
+    storageBucket: "deutschraum-521e8.firebasestorage.app",
+    messagingSenderId: "159229043222",
+    appId: "1:159229043222:web:b0173c95139d3786600b37"
+  };
+  try {
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const root = db.ref("appdata");
+    const SKIP = new Set(["dz_user", "dz_dark"]);
+
+    // Override localStorage.setItem để ghi đồng thời lên Firebase
+    const orig = localStorage.setItem.bind(localStorage);
+    let _silent = false;
+    localStorage.setItem = function(k, v) {
+      orig(k, v);
+      if (_silent) return;
+      if (!k || !k.startsWith("dz_") || SKIP.has(k)) return;
+      try { db.ref("appdata/" + k).set(JSON.parse(v)); } catch (e) {}
+    };
+
+    // Lắng nghe cloud → đồng bộ vào localStorage + báo cho React
+    root.on("value", function(snap) {
+      const data = snap.val() || {};
+      let dirty = false;
+      for (const k in data) {
+        const valStr = JSON.stringify(data[k]);
+        if (localStorage.getItem(k) !== valStr) {
+          _silent = true; orig(k, valStr); _silent = false;
+          dirty = true;
+        }
+      }
+      if (dirty) {
+        window.dispatchEvent(new Event("dz-zoom"));
+        window.dispatchEvent(new Event("dz-sync"));
+      }
+    });
+    window.__dz_firebase = true;
+    console.log("Firebase sync OK");
+  } catch (e) {
+    console.warn("Firebase init failed, dùng localStorage thuần:", e);
+  }
+})();
+</script>
+
 <script type="text/babel" data-presets="react">
 const { useState, useMemo, useEffect } = React;
 
@@ -842,6 +896,11 @@ function CalendarModal({ teacher, onClose, user }) {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch (e) { return []; }
   });
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(audit)); } catch (e) {} }, [audit]);
+  useEffect(() => {
+    const h = () => { try { setAudit(JSON.parse(localStorage.getItem(STORAGE_KEY)) || []); } catch (e) {} };
+    window.addEventListener("dz-sync", h);
+    return () => window.removeEventListener("dz-sync", h);
+  }, []);
 
   // các buổi dự giờ (đã chọn) -> object đầy đủ
   const myAudit = canAudit ? ALL_SESSIONS.filter(s => audit.includes(s.date + "|" + s.classId)) : [];
@@ -1117,6 +1176,11 @@ function AuditDashboard() {
   const [mIdx, setMIdx] = useState(0);
   const [dayInfo, setDayInfo] = useState(null);
   const DAY_VN = ["CN","T2","T3","T4","T5","T6","T7"];
+  useEffect(() => {
+    const h = () => { setList(loadAudit()); setDone(loadDone()); };
+    window.addEventListener("dz-sync", h);
+    return () => window.removeEventListener("dz-sync", h);
+  }, []);
   const saveList = (next) => { setList(next); try { localStorage.setItem(AUDIT_KEY, JSON.stringify(next)); } catch (e) {} };
   const saveDone = (next) => { setDone(next); try { localStorage.setItem(AUDIT_DONE_KEY, JSON.stringify(next)); } catch (e) {} };
   const remove = (k) => { if (!window.confirm("Bỏ buổi này khỏi danh sách dự giờ?")) return; saveList(list.filter(x => x !== k)); saveDone(done.filter(x => x !== k)); };
@@ -1624,6 +1688,11 @@ function SchedulerPage() {
   const [pickerFor, setPickerFor] = useState(null);
   const [slipFor, setSlipFor] = useState(null);
   const DAY_VN = ["CN","T2","T3","T4","T5","T6","T7"];
+  useEffect(() => {
+    const h = () => setSched(loadSched());
+    window.addEventListener("dz-sync", h);
+    return () => window.removeEventListener("dz-sync", h);
+  }, []);
 
   const updateFor = (name, listOrFn) => {
     setSched(prev => {
