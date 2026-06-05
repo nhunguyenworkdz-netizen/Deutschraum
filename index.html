@@ -61,12 +61,12 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
 
-<!-- Firebase Realtime Database — đồng bộ dữ liệu giữa các máy -->
+<!-- Firebase Realtime Database — đồng bộ tự động giữa các máy -->
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
 <script>
 (function(){
-  const firebaseConfig = {
+  const cfg = {
     apiKey: "AIzaSyDh8zUnX5fSmHghECwX1tbTKAZ1hnF4uDw",
     authDomain: "deutschraum-521e8.firebaseapp.com",
     databaseURL: "https://deutschraum-521e8-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -75,13 +75,13 @@
     messagingSenderId: "159229043222",
     appId: "1:159229043222:web:b0173c95139d3786600b37"
   };
+  window.__dz_cloud_status = "loading";
   try {
-    firebase.initializeApp(firebaseConfig);
+    if (typeof firebase === "undefined") throw new Error("Firebase SDK chưa tải được (có thể bị chặn).");
+    firebase.initializeApp(cfg);
     const db = firebase.database();
     const root = db.ref("appdata");
     const SKIP = new Set(["dz_user", "dz_dark"]);
-
-    // Override localStorage.setItem để ghi đồng thời lên Firebase
     const orig = localStorage.setItem.bind(localStorage);
     let _silent = false;
     localStorage.setItem = function(k, v) {
@@ -90,8 +90,16 @@
       if (!k || !k.startsWith("dz_") || SKIP.has(k)) return;
       try { db.ref("appdata/" + k).set(JSON.parse(v)); } catch (e) {}
     };
-
-    // Lắng nghe cloud → đồng bộ vào localStorage + báo cho React
+    root.once("value").then(function(snap) {
+      const cloud = snap.val() || {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (!k || !k.startsWith("dz_") || SKIP.has(k)) continue;
+        if (!(k in cloud)) {
+          try { db.ref("appdata/" + k).set(JSON.parse(localStorage.getItem(k))); } catch (e) {}
+        }
+      }
+    });
     root.on("value", function(snap) {
       const data = snap.val() || {};
       let dirty = false;
@@ -102,18 +110,18 @@
           dirty = true;
         }
       }
-      if (dirty) {
-        window.dispatchEvent(new Event("dz-zoom"));
-        window.dispatchEvent(new Event("dz-sync"));
-      }
+      if (dirty) { window.dispatchEvent(new Event("dz-zoom")); window.dispatchEvent(new Event("dz-sync")); }
     });
-    window.__dz_firebase = true;
-    console.log("Firebase sync OK");
+    window.__dz_cloud_status = "ok";
+    console.log("✓ Firebase đã kết nối");
   } catch (e) {
-    console.warn("Firebase init failed, dùng localStorage thuần:", e);
+    window.__dz_cloud_status = "blocked";
+    console.warn("Firebase không kết nối được — dùng Xuất/Nhập file thay thế:", e.message);
   }
+  window.dispatchEvent(new Event("dz-cloud-status"));
 })();
 </script>
+
 
 <script type="text/babel" data-presets="react">
 const { useState, useMemo, useEffect } = React;
@@ -411,6 +419,18 @@ function Logo() {
 }
 
 /* ============ HEADER ============ */
+function CloudStatus() {
+  const [status, setStatus] = useState(window.__dz_cloud_status || "loading");
+  useEffect(() => {
+    const h = () => setStatus(window.__dz_cloud_status || "loading");
+    window.addEventListener("dz-cloud-status", h);
+    return () => window.removeEventListener("dz-cloud-status", h);
+  }, []);
+  if (status === "ok") return <div className="px-3 py-1.5 text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span className="hidden sm:inline">Đã kết nối cloud</span></div>;
+  if (status === "blocked") return <div className="px-3 py-1.5 text-[10px] text-amber-600 dark:text-amber-400 font-semibold flex items-center gap-1.5" title="Cloud bị chặn — dùng Xuất/Nhập file để đồng bộ"><span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span><span className="hidden sm:inline">Offline (dùng file)</span></div>;
+  return <div className="px-3 py-1.5 text-[10px] text-stone-400 font-semibold flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-stone-300 animate-pulse"></span><span className="hidden sm:inline">Đang kết nối...</span></div>;
+}
+
 function Sidebar({ tab, setTab, dark, setDark, user, onLogout }) {
   const navTabs = [
     { v: "home", l: "Tổng quan", i: <I.home/> },
@@ -456,6 +476,7 @@ function Sidebar({ tab, setTab, dark, setDark, user, onLogout }) {
             {dark ? <I.sun/> : <I.moon/>}
           </button>
         </div>
+        <CloudStatus/>
       </div>
     </aside>
   );
@@ -1720,6 +1741,44 @@ function SchedulerPage() {
           { label:"Lớp đang chạy", value: CLASSES.filter(c=>c.status!=="finished").length },
         ]}
       />
+
+      <div className="mb-5 rounded-2xl border border-stone-200/70 dark:border-stone-800 bg-white dark:bg-stone-900 p-4 card-shadow flex flex-wrap items-center justify-between gap-3">
+        <div className="flex-1 min-w-0">
+          <div className="font-semibold text-sm text-stone-800 dark:text-stone-100">💾 Đồng bộ dữ liệu giữa các máy</div>
+          <div className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">Xếp xong → bấm <b>Xuất</b> để tải file → gửi qua Zalo. Người nhận bấm <b>Nhập</b> chọn file đó để thấy hết.</div>
+        </div>
+        <div className="flex gap-2 flex-shrink-0">
+          <button onClick={()=> {
+            const payload = { schedule: loadSched(), zoom: (function(){ try{return JSON.parse(localStorage.getItem("dz_zoom"))||{};}catch(e){return{};}})(), exportedAt: new Date().toISOString() };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], {type: "application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "dz-schedule-" + new Date().toISOString().slice(0,10) + ".json";
+            document.body.appendChild(a); a.click(); a.remove();
+            URL.revokeObjectURL(url);
+          }} className="px-4 py-2 rounded-full bg-accent-600 hover:bg-accent-700 text-white text-sm font-semibold transition flex items-center gap-1.5">
+            ⬇ Xuất file
+          </button>
+          <label className="px-4 py-2 rounded-full border border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 text-sm font-medium transition flex items-center gap-1.5 cursor-pointer">
+            ⬆ Nhập file
+            <input type="file" accept=".json,application/json" className="hidden" onChange={e => {
+              const f = e.target.files && e.target.files[0]; if (!f) return;
+              const reader = new FileReader();
+              reader.onload = () => {
+                try {
+                  const data = JSON.parse(reader.result);
+                  if (data.schedule) { localStorage.setItem("dz_cross_schedule", JSON.stringify(data.schedule)); setSched(data.schedule); }
+                  if (data.zoom) { localStorage.setItem("dz_zoom", JSON.stringify(data.zoom)); window.dispatchEvent(new Event("dz-zoom")); }
+                  alert("✓ Nhập thành công! Dữ liệu đã được cập nhật.");
+                } catch (err) { alert("Lỗi: file không đúng định dạng."); }
+                e.target.value = "";
+              };
+              reader.readAsText(f);
+            }}/>
+          </label>
+        </div>
+      </div>
 
       <div className="space-y-3">
         {TEACHERS.map(t => {
