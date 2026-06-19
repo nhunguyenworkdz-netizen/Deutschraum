@@ -39,12 +39,13 @@
   .fade-in { animation: fadeIn .35s cubic-bezier(.2,.7,.3,1) both; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   ::selection { background: rgba(122,110,240,.22); }
-  .card-shadow { box-shadow: 0 1px 2px rgba(28,25,23,.04), 0 4px 16px -8px rgba(28,25,23,.10); }
-  html.dark .card-shadow { box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6); }
+  .card-shadow { box-shadow: 0 1px 2px rgba(28,25,23,.05), 0 6px 20px -10px rgba(28,25,23,.12); }
+  html.dark .card-shadow { box-shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 28px -14px rgba(0,0,0,.7); }
   .hover-lift { transition: transform .25s cubic-bezier(.2,.7,.3,1), box-shadow .25s, border-color .25s; }
-  .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(28,25,23,.05), 0 16px 32px -12px rgba(28,25,23,.18); }
-  .app-bg { background: radial-gradient(900px 460px at 100% -6%, #e9ebfa 0%, transparent 55%), radial-gradient(700px 380px at 0% 100%, #f3eee6 0%, transparent 55%), #faf9f7; background-attachment: fixed; }
-  html.dark .app-bg { background: radial-gradient(900px 460px at 100% -6%, #221f33 0%, transparent 55%), radial-gradient(700px 380px at 0% 100%, #1c1a18 0%, transparent 55%), #141210; background-attachment: fixed; }
+  .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(28,25,23,.06), 0 20px 40px -14px rgba(28,25,23,.2); }
+  html.dark .hover-lift:hover { box-shadow: 0 6px 12px rgba(0,0,0,.4), 0 24px 48px -16px rgba(0,0,0,.75); }
+  .app-bg { background: #fafaf9; }
+  html.dark .app-bg { background: #191918; }
   /* Print: chỉ hiện phiếu, ẩn mọi thứ khác */
   @media print {
     body * { visibility: hidden !important; }
@@ -523,23 +524,16 @@ function Avatar({ teacher, size="md" }) {
 
 function PageHeader({ kicker, title, subtitle, stats }) {
   return (
-    <div className="mb-8">
-      {kicker && (
-        <div className="inline-flex items-center gap-2 mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-accent-500"></span>
-          <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-accent-700 dark:text-accent-300">{kicker}</span>
-        </div>
-      )}
-      <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-stone-900 dark:text-white">{title}</h1>
-      {subtitle && <p className="text-stone-500 dark:text-stone-400 mt-2 text-sm">{subtitle}</p>}
+    <div className="mb-8 pb-6 border-b border-stone-100 dark:border-stone-800">
+      <h1 className="font-display text-3xl font-bold tracking-tight text-stone-900 dark:text-white">{title}</h1>
+      {subtitle && <p className="text-stone-500 dark:text-stone-400 mt-1.5 text-sm">{subtitle}</p>}
       {stats && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+        <div className="flex flex-wrap items-baseline gap-x-6 gap-y-1.5 mt-4 text-sm">
           {stats.map(s => (
-            <div key={s.label} className="relative rounded-2xl border border-stone-200/70 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-3.5 card-shadow hover-lift overflow-hidden">
-              <div className="absolute right-0 top-0 w-16 h-16 rounded-full bg-accent-300/25 dark:bg-accent-600/15 blur-2xl -mr-4 -mt-4"></div>
-              <div className="relative text-[11px] font-medium uppercase tracking-wider text-stone-400 dark:text-stone-500">{s.label}</div>
-              <div className="relative font-display text-2xl font-semibold text-stone-900 dark:text-white mt-1 tabular-nums">{s.value}</div>
-            </div>
+            <span key={s.label} className="inline-flex items-baseline gap-1.5">
+              <span className="text-stone-400 dark:text-stone-500">{s.label}</span>
+              <span className="font-semibold text-stone-800 dark:text-stone-100 tabular-nums">{s.value}</span>
+            </span>
           ))}
         </div>
       )}
@@ -618,7 +612,7 @@ function ClassCard({ cls }) {
   const cc = classColor(cls.id);
   const faded = cls.status === "finished";
   return (
-    <div className={`group relative rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-5 sm:p-6 card-shadow hover-lift overflow-hidden ${faded?"opacity-80":""}`}>
+    <div className={`group relative rounded-lg border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 p-5 sm:p-6 card-shadow hover-lift overflow-hidden ${faded?"opacity-80":""}`}>
       <div className="absolute left-0 top-0 bottom-0 w-1.5" style={{ background: cc.dot }}></div>
 
       <div className="flex items-start justify-between gap-3 mb-4">
@@ -743,7 +737,7 @@ function TeachersPage({ user }) {
 function TeacherCard({ teacher, maxLoad, onOpen }) {
   const c = teacherColor(teacher);
   return (
-    <div onClick={onOpen} className="group cursor-pointer rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-5 card-shadow hover-lift relative overflow-hidden">
+    <div onClick={onOpen} className="group cursor-pointer rounded-lg border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 p-5 card-shadow hover-lift relative overflow-hidden">
       <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full opacity-50 blur-2xl" style={{ background: c.bg }}></div>
       <div className="relative flex items-center gap-3.5 mb-4">
         <Avatar teacher={teacher} size="lg"/>
@@ -1148,7 +1142,16 @@ const openZoom = (url) => { if (url && window.confirm("Vào phòng Zoom của l�
 
 function AuditHero() {
   return (
-    <div className="relative overflow-hidden rounded-[1.75rem] mb-8 shadow-xl" style={{ background: "linear-gradient(135deg, #173a2f 0%, #275a48 55%, #3a8068 100%)" }}>
+    <div className="mb-6 pb-6 border-b border-stone-100 dark:border-stone-800">
+      <div className="text-[11px] uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-1">Cô Khiết Quỳnh · Phòng dự giờ</div>
+      <h1 className="font-display text-3xl font-bold tracking-tight text-stone-900 dark:text-white">Dự giờ của tôi</h1>
+    </div>
+  );
+}
+
+function _AuditHeroOld() {
+  return (
+    <div className="relative overflow-hidden rounded-[1.75rem] mb-8 shadow-xl hidden" style={{ background: "linear-gradient(135deg, #173a2f 0%, #275a48 55%, #3a8068 100%)" }}>
       {/* texture chấm phấn */}
       <svg className="absolute inset-0 w-full h-full opacity-[0.12]" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="chk" width="4" height="4" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="0.6" fill="white"/></pattern></defs><rect width="100%" height="100%" fill="url(#chk)"/></svg>
       {/* đồng hồ */}
@@ -1317,7 +1320,7 @@ function AuditDashboard() {
           { label:"Đã dự", value: attended.length, dot:"#5e7e73" },
           { label:"Số lớp", value: classes.length, dot:"#3878b8" },
         ].map(s => (
-          <div key={s.label} className="relative rounded-2xl border border-stone-200/70 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-3.5 card-shadow hover-lift overflow-hidden">
+          <div key={s.label} className="relative rounded-lg border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-3.5 card-shadow hover-lift overflow-hidden">
             <div className="absolute right-0 top-0 w-20 h-20 rounded-full blur-2xl opacity-25 -mr-6 -mt-6" style={{ background: s.dot }}></div>
             <div className="relative flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ background: s.dot }}></span><span className="text-[11px] font-medium uppercase tracking-wider text-stone-400 dark:text-stone-500">{s.label}</span></div>
             <div className="relative font-display text-2xl font-bold text-stone-900 dark:text-white mt-1 tabular-nums">{s.value}</div>
@@ -1336,7 +1339,7 @@ function AuditDashboard() {
           <h2 className="font-display text-lg font-semibold text-stone-900 dark:text-white mb-3">Theo giáo viên</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {byTeacher.map(({ t, count }) => (
-              <div key={t.name} className="flex items-center gap-3 rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-3 card-shadow">
+              <div key={t.name} className="flex items-center gap-3 rounded-lg border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-3 card-shadow">
                 <Avatar teacher={t} size="md"/>
                 <div className="min-w-0">
                   <div className="text-sm font-medium text-stone-800 dark:text-stone-100 truncate">{t.name}</div>
@@ -1353,7 +1356,7 @@ function AuditDashboard() {
           <h2 className="font-display text-lg font-semibold text-stone-900 dark:text-white mb-3">Theo tháng</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {byMonth.map(m => (
-              <div key={m.key} className="rounded-2xl border border-stone-200/70 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-3.5 card-shadow">
+              <div key={m.key} className="rounded-lg border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-3.5 card-shadow">
                 <div className="text-[11px] font-medium uppercase tracking-wider text-stone-400 dark:text-stone-500">Tháng {m.key}</div>
                 <div className="font-display text-2xl font-semibold text-stone-900 dark:text-white mt-1 tabular-nums">{m.total} <span className="text-sm font-sans font-normal text-stone-400">buổi</span></div>
                 <div className="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5 font-medium">✓ {m.done} đã dự{m.total-m.done>0 && ` · còn ${m.total-m.done}`}</div>
@@ -1373,7 +1376,7 @@ function AuditDashboard() {
               <button disabled={cal.safe===cal.months.length-1} onClick={()=>setMIdx(i=>Math.min(cal.months.length-1,i+1))} className="w-8 h-8 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center text-stone-500"><I.chevR/></button>
             </div>
           </div>
-          <div className="rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-4 card-shadow">
+          <div className="rounded-lg border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 p-4 card-shadow">
             <div className="grid grid-cols-7 gap-1.5 text-center text-[11px] font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-wider mb-2">
               {["T2","T3","T4","T5","T6","T7","CN"].map(d => <div key={d}>{d}</div>)}
             </div>
@@ -1495,7 +1498,8 @@ function HomePage({ go, user }) {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 fade-in">
-      {/* Hero / Sảnh */}
+      {/* Hero / Sảnh — Notion-style đơn giản */}
+      <div className="hidden">
       <div className="relative overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-[#7c3a52] via-[#c25a3c] to-[#e0a44a] text-white p-8 sm:p-10 mb-8 shadow-xl">
         <div className="absolute -right-12 -top-12 w-56 h-56 rounded-full bg-white/10 blur-2xl"></div>
         <div className="absolute right-24 -bottom-10 w-40 h-40 rounded-full bg-[#f5b328]/25 blur-2xl"></div>
@@ -1538,6 +1542,15 @@ function HomePage({ go, user }) {
           </div>
         </div>
       </div>
+      </div>
+
+      {/* Header đơn giản */}
+      <div className="mb-8">
+        <div className="text-[11px] uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-1">{greet}{user ? `, ${user}` : ""}</div>
+        <h1 className="font-display text-3xl font-bold tracking-tight text-stone-900 dark:text-white">{g.de}</h1>
+        <p className="text-stone-500 dark:text-stone-400 mt-1 text-sm italic">{g.vi}</p>
+        <p className="text-stone-400 dark:text-stone-500 mt-1 text-xs capitalize">{dateStr}{deTime && ` · ${deTime} giờ Đức`}</p>
+      </div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
@@ -1547,7 +1560,7 @@ function HomePage({ go, user }) {
           { label:"Giáo viên", value:stats.teachers, dot:"#c08b2e" },
           { label:"Buổi còn lại", value:stats.sessions, dot:"#b84c69" },
         ].map(s => (
-          <div key={s.label} className="relative rounded-2xl border border-stone-200/70 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-4 card-shadow hover-lift overflow-hidden">
+          <div key={s.label} className="relative rounded-lg border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-4 card-shadow hover-lift overflow-hidden">
             <div className="absolute right-0 top-0 w-20 h-20 rounded-full blur-2xl opacity-25 -mr-6 -mt-6" style={{ background:s.dot }}></div>
             <div className="relative flex items-center gap-1.5"><span className="w-2 h-2 rounded-full" style={{ background:s.dot }}></span><span className="text-[11px] font-medium uppercase tracking-wider text-stone-400 dark:text-stone-500">{s.label}</span></div>
             <div className="relative font-display text-3xl font-semibold text-stone-900 dark:text-white mt-1.5 tabular-nums">{s.value}</div>
@@ -1742,50 +1755,13 @@ function SchedulerPage() {
         ]}
       />
 
-      <div className="mb-5 rounded-2xl border border-stone-200/70 dark:border-stone-800 bg-white dark:bg-stone-900 p-4 card-shadow flex flex-wrap items-center justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="font-semibold text-sm text-stone-800 dark:text-stone-100">💾 Đồng bộ dữ liệu giữa các máy</div>
-          <div className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">Xếp xong → bấm <b>Xuất</b> để tải file → gửi qua Zalo. Người nhận bấm <b>Nhập</b> chọn file đó để thấy hết.</div>
-        </div>
-        <div className="flex gap-2 flex-shrink-0">
-          <button onClick={()=> {
-            const payload = { schedule: loadSched(), zoom: (function(){ try{return JSON.parse(localStorage.getItem("dz_zoom"))||{};}catch(e){return{};}})(), exportedAt: new Date().toISOString() };
-            const blob = new Blob([JSON.stringify(payload, null, 2)], {type: "application/json"});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "dz-schedule-" + new Date().toISOString().slice(0,10) + ".json";
-            document.body.appendChild(a); a.click(); a.remove();
-            URL.revokeObjectURL(url);
-          }} className="px-4 py-2 rounded-full bg-accent-600 hover:bg-accent-700 text-white text-sm font-semibold transition flex items-center gap-1.5">
-            ⬇ Xuất file
-          </button>
-          <label className="px-4 py-2 rounded-full border border-stone-200 dark:border-stone-700 hover:bg-stone-100 dark:hover:bg-stone-800 text-sm font-medium transition flex items-center gap-1.5 cursor-pointer">
-            ⬆ Nhập file
-            <input type="file" accept=".json,application/json" className="hidden" onChange={e => {
-              const f = e.target.files && e.target.files[0]; if (!f) return;
-              const reader = new FileReader();
-              reader.onload = () => {
-                try {
-                  const data = JSON.parse(reader.result);
-                  if (data.schedule) { localStorage.setItem("dz_cross_schedule", JSON.stringify(data.schedule)); setSched(data.schedule); }
-                  if (data.zoom) { localStorage.setItem("dz_zoom", JSON.stringify(data.zoom)); window.dispatchEvent(new Event("dz-zoom")); }
-                  alert("✓ Nhập thành công! Dữ liệu đã được cập nhật.");
-                } catch (err) { alert("Lỗi: file không đúng định dạng."); }
-                e.target.value = "";
-              };
-              reader.readAsText(f);
-            }}/>
-          </label>
-        </div>
-      </div>
 
       <div className="space-y-3">
         {TEACHERS.map(t => {
           const list = sched[t.name] || [];
           const sessions = ALL_SESSIONS.filter(s => list.includes(s.date + "|" + s.classId)).sort((a,b)=>a.date.localeCompare(b.date));
           return (
-            <div key={t.name} className="rounded-2xl border border-stone-200/80 dark:border-stone-800 bg-white dark:bg-stone-900 p-4 sm:p-5 card-shadow hover-lift">
+            <div key={t.name} className="rounded-lg border border-stone-100 dark:border-stone-800 bg-white dark:bg-stone-900 p-4 sm:p-5 card-shadow hover-lift">
               <div className="flex items-center gap-4">
                 <Avatar teacher={t} size="lg"/>
                 <div className="flex-1 min-w-0">
